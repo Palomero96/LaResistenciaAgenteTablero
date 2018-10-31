@@ -1,0 +1,55 @@
+<agent xmlns="http://jadex.sourceforge.net/jadex"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex 
+	                    http://jadex.sourceforge.net/jadex-0.96.xsd"
+	name="tablero">
+	<imports>
+	    <import>jadex.runtime.*</import>
+        <import>jadex.planlib.*</import>
+        <import>jadex.util.*</import>
+        <import>jadex.adapter.fipa.*</import>
+        <import>java.util.logging.*</import>
+        <import>java.util.*</import>
+	</imports>
+
+	<capabilities>
+	    <capability name="dfcap" file="jadex.planlib.DF"/>
+	</capabilities>
+
+	<beliefs>
+	</beliefs>
+
+	<goals>
+	    <maintaingoalref name="df_keep_registered">
+            <concrete ref="dfcap.df_keep_registered"/>
+        </maintaingoalref>
+
+	</goals>
+
+	<plans>
+	    
+	</plans>
+
+	<events>
+	</events>
+
+	<expressions>
+	</expressions>
+
+	<properties>
+	</properties>
+	<configurations>
+	    <configuration name="default">
+            <goals>
+                    <initialgoal ref="df_keep_registered">
+                         <parameter ref="description">
+                             <value>
+                SFipa.createAgentDescription(null, SFipa.createServiceDescription("tablero", null ,null, null))
+                             </value>
+                         </parameter>
+                      
+                     </initialgoal>
+            </goals>
+        </configuration>
+       </configurations>
+</agent>

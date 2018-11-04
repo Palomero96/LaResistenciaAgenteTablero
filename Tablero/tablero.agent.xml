@@ -1,0 +1,137 @@
+<agent xmlns="http://jadex.sourceforge.net/jadex"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://jadex.sourceforge.net/jadex
+http://jadex.sourceforge.net/jadex-0.96.xsd"
+name="tablero"
+package="Tablero"
+>
+	<imports>
+	    <import>jadex.*</import>
+	    <import>LaResistenciaAgenteTablero.*</import>
+
+	</imports>
+
+	<capabilities>
+	    <capability name="dfcap" file="jadex.planlib.DF"/>
+	</capabilities>
+
+	<beliefs>
+		<!-- Hace falta que el voto lo tenga el tablero en creencias? -->
+
+		<!-- Representacion del tablero -->
+		<belief name="myself" class="Tablero">
+			<fact>new Tablero()</fact>
+		</belief>
+		<!-- Los jugadores -->
+		<beliefset name="jugadores" class="Jugador"/>
+
+		<!-- Representacion de la ronda en la que estamos-->
+		<belief name="Ronda" class="int">
+			<fact>1</fact>
+		</belief>
+		<!-- Representacion de el numero de votaciones-->
+		<belief name="VotacionesRechazadas" class="int">
+			<fact>0</fact>	
+		</belief>
+		<!-- Representacion de el numero de misiones que se han completado-->
+		<belief name="MisionesCompletadas" class="int">
+			<fact>0</fact>	
+		</belief>
+
+	</beliefs>
+	
+	<goals>
+		<!-- Objetivo principal jugar una partida -->
+		<performgoal name="JugarPartida" exclude="never" retrydelay="3000">
+			<contextcondition>
+				<!-- Como controlar que juegen mas de 5 personas-->
+				$beliefbase.players.length > 5
+			</contextcondition>
+		</performgoal>
+
+
+		<!-- Objetivo para que el agente tablero se registre -->
+	    <achievegoalref name="df_register">
+            <concrete ref="dfcap.df_register"/>
+        </achievegoalref>
+
+
+	</goals>
+
+	<plans> 
+		<!-- Registrar a un jugador -->
+		<plan name="register_plan">
+			<body class="TableroRegistraJugadorPlan"/>
+			<trigger>
+				<messageevent ref="request_unirsepartida" />
+			</trigger>
+		</plan>
+		<!-- Plan para preparar la partida (asignar en funcion del numeor quienes van a ser espias y demas) -->
+
+		<!-- -->
+	</plans>
+
+	<events>
+		<!-- Mensajes de Jugadores-->
+		<!-- UN jugador solicita unirse a la partida -->
+		<messageevent name="request_unirsepartida" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> <!-- Esto que es? -->
+ 			</parameter>
+			<parameter name="ontology" class="String" direction="fixed">
+				<value>BlackjackOntology.ONTOLOGY_NAME</value>  <!-- Esto que es? -->
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Unirse_a_la_partida.class</value>
+			</parameter>
+		</messageevent>
+		
+
+		<!--  -->
+		<messageevent name="inform_action_done" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="ontology" class="String" direction="fixed">
+				<value>BlackjackOntology.ONTOLOGY_NAME</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Done.class</value>
+			</parameter>
+		</messageevent>
+		
+		<!--  Propose aprobar equipo -->
+		<!--  Request votar_mision -->
+		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistentia) -->
+		<!--  Request del jugador que pide las tarjetas de equipo -->
+		<!--  Inform Repartir tarjetas aceptacion a los jugadores -->
+		<!--  Inform Repartir tarjetas exito/fracaso a los jugadores -->
+		<!--  Inform avisar espias -->
+		<!--  inform asignar lider -->
+		<!--  Inform resultados Votacion mision -->
+		<!--  Inform resultados Votacion equipo -->
+
+	</events>
+
+	<properties>
+	</properties>
+	<configurations>
+	    <configuration name="default">
+            <goals>
+                <initialgoal ref="df_register">
+                    <parameter ref="description">
+                        <value>
+                		SFipa.createAgentDescription(null, SFipa.createServiceDescription("tablero", null ,null, null))
+                        </value>
+                    </parameter>
+                </initialgoal>
+            </goals>
+        </configuration>
+    </configurations>
+</agent>

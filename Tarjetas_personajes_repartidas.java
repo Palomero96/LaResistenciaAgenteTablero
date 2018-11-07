@@ -3,15 +3,15 @@ package predicados;
 import java.util.List;
 import conceptos.*;
 
-public class Tarjetas_aceptacion_repartidas implements Predicados {
-    private List<Tarjeta> lista;
+public class Tarjetas_personajes_repartidas implements Predicados {
+    private boolean espia;
     
-		public Tarjetas_aceptacion_repartidas()
+		public Tarjetas_personajes_repartidas()
 		{ ; }
-      public List<Tarjeta> getTarjetas_aceptacion_repartidas() {
-           return lista;
+      public boolean getTarjetas_personajes_repartidas() {
+           return espia;
        }
-       public void setTarjetas_aceptacion_repartidas(List<Tarjeta> l) {
-    	   lista=l;
+       public void setTarjetas_personajes_repartidas(boolean l) {
+    	   espia=l;
        }
 }

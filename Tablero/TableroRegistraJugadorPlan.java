@@ -31,8 +31,8 @@ public class TableroRegistraJugadorPlan extends Plan
 			player.setEspia(False);
 			player.setLider(False);
 		}
-		//Que haye mandar de respuesta?
-		Done done = new Done(rj);
-		sendMessage(request.createReply("inform_action_done", done));
+		//Creamos la respuesta para enviar al usuario/jugador
+		Unirse_a_la_Partida rj = new Unirse_a_la_Partida(rj);
+		sendMessage(request.createReply("agree_unirse_a_partida", rj));
 	}
 }

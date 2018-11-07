@@ -5,14 +5,14 @@ import java.util.List;
 import conceptos.*;
 
 public class Lider_asignado implements Predicados {
-    private Jugador lider;
+    private boolean lider;
     
 		public Lider_asignado()
 		{ ; }
-      public Lider getLider() {
+      public boolean getLider() {
            return lider;
        }
-       public void setLider(Lider l) {
+       public void setLider(boolean l) {
            lider=l;
        }
 }

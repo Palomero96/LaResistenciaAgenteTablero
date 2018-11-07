@@ -17,7 +17,8 @@ package="Tablero"
 
 	<beliefs>
 		<!-- Hace falta que el voto lo tenga el tablero en creencias? -->
-
+		<beliefset name="votos" class="Voto"/>
+		
 		<!-- Representacion del tablero -->
 		<belief name="myself" class="Tablero">
 			<fact>new Tablero()</fact>
@@ -44,8 +45,8 @@ package="Tablero"
 		<!-- Objetivo principal jugar una partida -->
 		<performgoal name="JugarPartida" exclude="never" retrydelay="3000">
 			<contextcondition>
-				<!-- Como controlar que juegen mas de 5 personas-->
-				$beliefbase.players.length > 5
+				<!-- Que empiece la partida cuando sean 7 jugadores(valor predeterminado)-->
+				$beliefbase.players.length == 7 
 			</contextcondition>
 		</performgoal>
 
@@ -73,16 +74,13 @@ package="Tablero"
 
 	<events>
 		<!-- Mensajes de Jugadores-->
-		<!-- UN jugador solicita unirse a la partida -->
+		<!-- Un jugador solicita unirse a la partida -->
 		<messageevent name="request_unirsepartida" direction="receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
-				<value>SFipa.NUGGETS_XML</value> <!-- Esto que es? -->
- 			</parameter>
-			<parameter name="ontology" class="String" direction="fixed">
-				<value>BlackjackOntology.ONTOLOGY_NAME</value>  <!-- Esto que es? -->
+				<value>SFipa.NUGGETS_XML</value> 
  			</parameter>
 			<parameter name="content-class" class="Class" direction="fixed">
 				<value>Unirse_a_la_partida.class</value>
@@ -90,19 +88,16 @@ package="Tablero"
 		</messageevent>
 		
 
-		<!--  -->
-		<messageevent name="inform_action_done" direction="send_receive" type="fipa">
+		<!-- Mensaje de respuesta para Unirse a la partida -->
+		<messageevent name="agree_unirse_a_partida" direction="send_receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
 				<value>SFipa.NUGGETS_XML</value>
  			</parameter>
-			<parameter name="ontology" class="String" direction="fixed">
-				<value>BlackjackOntology.ONTOLOGY_NAME</value>
- 			</parameter>
 			<parameter name="content-class" class="Class" direction="fixed">
-				<value>Done.class</value>
+				<value>Unirse_a_la_partida.class</value>
 			</parameter>
 		</messageevent>
 		

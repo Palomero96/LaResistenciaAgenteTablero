@@ -7,7 +7,9 @@ package="Tablero"
 >
 	<imports>
 	    <import>jadex.*</import>
-	    <import>LaResistenciaAgenteTablero.*</import>
+		<import>java.util.*</import>
+		<import>Tablero.Planes.*</import>
+	    <import>Tablero.Ontologia.*</import>
 
 	</imports>
 
@@ -16,19 +18,39 @@ package="Tablero"
 	</capabilities>
 
 	<beliefs>
-		<!-- Hace falta que el voto lo tenga el tablero en creencias? -->
-		<beliefset name="votos" class="Voto"/>
+		<!-- Para almacenar los votos del equipo -->
+		<beliefset name="votosequipo" class="Voto"/>
 		
-		<!-- Representacion del tablero -->
-		<belief name="myself" class="Tablero">
-			<fact>new Tablero()</fact>
-		</belief>
+		<!-- Para almacenar los votos del mision -->
+		<beliefset name="votosmision" class="Voto"/>
+
 		<!-- Los jugadores -->
 		<beliefset name="jugadores" class="Jugador"/>
 
 		<!-- Representacion de la ronda en la que estamos-->
 		<belief name="Ronda" class="int">
 			<fact>1</fact>
+		</belief>
+
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda1-->
+		<belief name="Equipo1" class="int">
+			<fact></fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda2-->
+		<belief name="Equipo2" class="int">
+			<fact></fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda3-->
+		<belief name="Equipo3" class="int">
+			<fact></fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda4-->
+		<belief name="Equipo4" class="int">
+			<fact></fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda5-->
+		<belief name="Equipo5" class="int">
+			<fact></fact>
 		</belief>
 		<!-- Representacion de el numero de votaciones-->
 		<belief name="VotacionesRechazadas" class="int">
@@ -46,10 +68,10 @@ package="Tablero"
 		<performgoal name="JugarPartida" exclude="never" retrydelay="3000">
 			<contextcondition>
 				<!-- Que empiece la partida cuando sean 7 jugadores(valor predeterminado)-->
-				$beliefbase.players.length == 7 
+				$beliefbase.players.length == 7
 			</contextcondition>
 		</performgoal>
-
+		<!-- Se -->
 
 		<!-- Objetivo para que el agente tablero se registre -->
 	    <achievegoalref name="df_register">
@@ -91,7 +113,20 @@ package="Tablero"
 		<!-- Mensaje de respuesta para Unirse a la partida -->
 		<messageevent name="agree_unirse_a_partida" direction="send_receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
-				<value>SFipa.INFORM</value>
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Unirse_a_la_partida.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de rechazo para Unirse a la partida -->
+		<messageevent name="refuse_unirse_a_partida" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REFUSE</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
 				<value>SFipa.NUGGETS_XML</value>

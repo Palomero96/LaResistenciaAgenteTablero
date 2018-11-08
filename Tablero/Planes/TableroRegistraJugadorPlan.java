@@ -35,6 +35,7 @@ public class TableroRegistraJugadorPlan extends Plan
 		//Creamos la respuesta para enviar al usuario/jugador
 		Unirse_a_la_Partida rj = new Unirse_a_la_Partida(rj);
 		sendMessage(request.createReply("agree_unirse_a_partida", rj));
+		System.out.println("hay " + getBeliefbase().getBeliefSet("jugadores").length + " jugadores");
 	}
 	Unirse_a_la_Partida rj = new Unirse_a_la_Partida(rj);
 	sendMessage(request.createReply("refuse_unirse_a_partida", rj));

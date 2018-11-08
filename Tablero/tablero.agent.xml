@@ -95,9 +95,11 @@ package="Tablero"
 	</plans>
 
 	<events>
+
 		<!-- Mensajes de Jugadores-->
+
 		<!-- Un jugador solicita unirse a la partida -->
-		<messageevent name="request_unirsepartida" direction="receive" type="fipa">
+		<messageevent name="Request_unirsepartida" direction="receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
 			</parameter>
@@ -109,9 +111,8 @@ package="Tablero"
 			</parameter>
 		</messageevent>
 		
-
-		<!-- Mensaje de respuesta para Unirse a la partida -->
-		<messageevent name="agree_unirse_a_partida" direction="send_receive" type="fipa">
+		<!-- Mensaje de respuesta de aceptacion para Unirse a la partida -->
+		<messageevent name="Agree_unirse_a_partida" direction="send_receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
 			</parameter>
@@ -124,7 +125,7 @@ package="Tablero"
 		</messageevent>
 
 		<!-- Mensaje de respuesta de rechazo para Unirse a la partida -->
-		<messageevent name="refuse_unirse_a_partida" direction="send_receive" type="fipa">
+		<messageevent name="Refuse_unirse_a_partida" direction="send_receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REFUSE</value>
 			</parameter>
@@ -136,16 +137,187 @@ package="Tablero"
 			</parameter>
 		</messageevent>
 		
-		<!--  Propose aprobar equipo -->
+		<!--  Request aprobar equipo -->
+		<messageevent name="Request_Aprobar_equipo" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Aprobar_equipo.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de aceptacion para aprobar el equipo -->
+		<messageevent name="Agree_Aprobar_equipo" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Aprobar_equipo.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de rechazo para aprobar el equipo-->
+		<messageevent name="Refuse_Aprobar_equipo" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REFUSE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Aprobar_equipo.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Request votar_mision -->
+		<messageevent name="Request_Votar_mision" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votar_mision.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de aceptacion para Votar la misión -->
+		<messageevent name="Agree_Votar_mision" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votar_mision.class</value>
+			</parameter>
+		</messageevent>
+		
 		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistentia) -->
+		<messageevent name="Inform_Tarjetas_personajes_repartidas" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_personajes_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Request del jugador que pide las tarjetas de equipo -->
+		<messageevent name="Request_Pedir_tarjetas_equipo" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Pedir_tarjetas_equipo.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de aceptacion al pedir las tarjetas de equipo -->
+		<messageevent name="Agree_Pedir_tarjetas_equipo" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Pedir_tarjetas_equipo.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Inform Repartir tarjetas aceptacion a los jugadores -->
+		<messageevent name="Inform_Tarjetas_aceptacion_repartidas" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_aceptacion_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Inform Repartir tarjetas exito/fracaso a los jugadores -->
+		<messageevent name="Inform_Tarjetas_exito_fracaso_repartidas" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_exito_fracaso_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Inform avisar espias -->
-		<!--  inform asignar lider -->
+		<messageevent name="Inform_Avisar_espias" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Avisar_espias.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform asignar lider -->
+		<messageevent name="Inform_Lider_asignado" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Lider_asignado.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Inform resultados Votacion mision -->
+		<messageevent name="Inform_Votacion_publicada_mision" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votacion_publicada_mision.class</value>
+			</parameter>
+		</messageevent>
+
 		<!--  Inform resultados Votacion equipo -->
+		<messageevent name="Inform_Votacion_publicada_equipo" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votacion_publicada_equipo.class</value>
+			</parameter>
+		</messageevent>
 
 	</events>
 

@@ -68,7 +68,7 @@ package="Tablero"
 		<performgoal name="JugarPartida" exclude="never" retrydelay="3000">
 			<contextcondition>
 				<!-- Que empiece la partida cuando sean 7 jugadores(valor predeterminado)-->
-				$beliefbase.players.length == 7
+				$beliefbase.jugadores.length == 7
 			</contextcondition>
 		</performgoal>
 		<!-- Se -->

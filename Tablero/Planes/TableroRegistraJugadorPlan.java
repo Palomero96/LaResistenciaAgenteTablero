@@ -1,4 +1,4 @@
-package Tablero
+package LaResistenciaAgenteTablero.Tablero
 
 import jadex.adapter.fipa.*;
 import jadex.runtime.IMessageEvent;
@@ -19,19 +19,23 @@ public class TableroRegistraJugadorPlan extends Plan
 		Jugador player = rj.getJugador();
 		player.setAgentID((AgentIdentifier)request.getParameter("sender").getValue());
 		getLogger().info("New player "+player);
-		if (getBeliefbase.getBeliefSet("jugadores").length < 8) {
+		Lista_Jugadores jugadores = getBeliefbase().getBeliefSet("jugadores");
+		if (jugadores.size() < 8) {
 			player.setLider(False);
-			if(getBeliefbase().getBeliefSet("jugadores")==null){
+			if(jugadores.isEmpty()){
 				//Si el jugador es el primero que se une a la partida se le asigna como lider
 				player.setLider(True)
+				//Le enviamos al lider el mensaje de que es lider
+				IMessageEvent enviar = createMessageEvent("Inform_Tarjetas_personajes_repartidas");
+				Lider_asignado rj = new Lider_asignado;
+				rj.setLider(True);
+				enviar.getParameterSet(SFipa.RECEIVERS).addValue(player.getIDAgente());
+				enviar.setContent(rj);
+				sendMessage(enviar);
 			}
 			player.setEspia(False);
-			
-			if(!getBeliefbase().getBeliefSet("jugadores").containsFact(player))
-			{
-				getBeliefbase().getBeliefSet("jugadores").addFact(player);
-			}
-			
+			jugadores.add(player);
+			getBeliefbase().getBeliefSet("jugadores").setFact(jugadores);
 		//Creamos la respuesta para enviar al usuario/jugador
 		Unirse_a_la_Partida rj = new Unirse_a_la_Partida(rj);
 		sendMessage(request.createReply("agree_unirse_a_partida", rj));

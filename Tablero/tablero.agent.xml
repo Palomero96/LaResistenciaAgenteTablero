@@ -3,13 +3,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://jadex.sourceforge.net/jadex
 http://jadex.sourceforge.net/jadex-0.96.xsd"
 name="tablero"
-package="Tablero"
+package="LaResistenciaAgenteTablero.Tablero"
 >
 	<imports>
 	    <import>jadex.*</import>
 		<import>java.util.*</import>
-		<import>Tablero.Planes.*</import>
-	    <import>Tablero.Ontologia.*</import>
+		<import>LaResistenciaAgenteTablero.Tablero.Planes.*</import>
+	    <import>LaResistenciaAgenteTablero.Ontologia.*</import>
 
 	</imports>
 
@@ -25,7 +25,11 @@ package="Tablero"
 		<beliefset name="votosmision" class="Voto"/>
 
 		<!-- Los jugadores -->
-		<beliefset name="jugadores" class="Jugador"/>
+		<beliefset name="jugadores" class="Lista_Jugadores"/>
+
+		<belief name="Preparada" class="boolean">
+			<fact>False</fact>
+		</belief>
 
 		<!-- Representacion de la ronda en la que estamos-->
 		<belief name="Ronda" class="int">
@@ -65,13 +69,19 @@ package="Tablero"
 	
 	<goals>
 		<!-- Objetivo principal jugar una partida -->
-		<performgoal name="JugarPartida" exclude="never" retrydelay="3000">
+		<performgoal name="JugarPartida" exclude="never">
 			<contextcondition>
 				<!-- Que empiece la partida cuando sean 7 jugadores(valor predeterminado)-->
 				$beliefbase.jugadores.length == 7
 			</contextcondition>
 		</performgoal>
 		<!-- Se -->
+		<performgoal name="AvisarEspias" exclude="never">
+			<contextcondition>
+				<!-- Para que avise a los espias de quienes son los otros espias-->
+				$beliefbase.Preparada == True
+			</contextcondition>
+		</performgoal>
 
 		<!-- Objetivo para que el agente tablero se registre -->
 	    <achievegoalref name="df_register">
@@ -86,12 +96,23 @@ package="Tablero"
 		<plan name="register_plan">
 			<body class="TableroRegistraJugadorPlan"/>
 			<trigger>
-				<messageevent ref="request_unirsepartida" />
+				<messageevent ref="request_unirsepartida"/>
 			</trigger>
 		</plan>
 		<!-- Plan para preparar la partida (asignar en funcion del numeor quienes van a ser espias y demas) -->
-
+		<plan name="PrepararPartida">
+			<body class="PrepararPartidaPlan"/>
+			<trigger>
+				<goals ref="JugarPartida"/>
+			</trigger>
+		</plan>
 		<!-- -->
+		<plan name="AvisarEspias">
+			<body class="AvisarEspiasPlan"/>
+			<trigger>
+				<goals ref="AvisarEspias"/>
+			</trigger>
+		</plan>
 	</plans>
 
 	<events>

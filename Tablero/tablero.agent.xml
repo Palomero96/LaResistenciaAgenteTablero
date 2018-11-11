@@ -27,9 +27,9 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<!-- Los jugadores -->
 		<beliefset name="jugadores" class="Lista_Jugadores"/>
 
-		<belief name="Preparada" class="boolean">
-			<fact>False</fact>
-		</belief>
+		<!-- Jugadores que van a ir a la mision -->
+		<beliefset name="Equipo" class="Lista_Jugadores"/>
+
 
 		<!-- Representacion de la ronda en la que estamos-->
 		<belief name="Ronda" class="int">
@@ -38,23 +38,23 @@ package="LaResistenciaAgenteTablero.Tablero"
 
 		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda1-->
 		<belief name="Equipo1" class="int">
-			<fact></fact>
+			<fact>2</fact>
 		</belief>
 		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda2-->
 		<belief name="Equipo2" class="int">
-			<fact></fact>
+			<fact>3</fact>
 		</belief>
 		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda3-->
 		<belief name="Equipo3" class="int">
-			<fact></fact>
+			<fact>3</fact>
 		</belief>
 		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda4-->
 		<belief name="Equipo4" class="int">
-			<fact></fact>
+			<fact>4</fact>
 		</belief>
 		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda5-->
 		<belief name="Equipo5" class="int">
-			<fact></fact>
+			<fact>4</fact>
 		</belief>
 		<!-- Representacion de el numero de votaciones-->
 		<belief name="VotacionesRechazadas" class="int">
@@ -63,6 +63,12 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<!-- Representacion de el numero de misiones que se han completado-->
 		<belief name="MisionesCompletadas" class="int">
 			<fact>0</fact>	
+		</belief>
+
+
+		<!-- Creencias que indican que se ha terminado un plan-->
+		<belief name="Preparada" class="boolean">
+			<fact>False</fact>
 		</belief>
 
 	</beliefs>
@@ -75,7 +81,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 				$beliefbase.jugadores.length == 7
 			</contextcondition>
 		</performgoal>
-		<!-- Se -->
+		<!-- Objetivo de avisar a los espias de quienes son los otros espias-->
 		<performgoal name="AvisarEspias" exclude="never">
 			<contextcondition>
 				<!-- Para que avise a los espias de quienes son los otros espias-->
@@ -83,6 +89,21 @@ package="LaResistenciaAgenteTablero.Tablero"
 			</contextcondition>
 		</performgoal>
 
+		<!-- Objetivo de publicar la votacion de mision-->
+		<performgoal name="PublicarVotacionMision" exclude="never">
+			<contextcondition>
+				<!-- La condicion para que se active esto sera que el numero de votos de la mision corresponda con el numero de jugadores que estan en la mision-->
+				
+			</contextcondition>
+		</performgoal>
+
+		<!-- Objetivo de publicar la votacion de mision-->
+		<performgoal name="Aprobar_equipo" exclude="never">
+			<contextcondition>
+			<!-- Que se active cuando el equipo este en las creencias-->
+			$beliefbase.Equipo != null
+			</contextcondition>
+		</performgoal>
 		<!-- Objetivo para que el agente tablero se registre -->
 	    <achievegoalref name="df_register">
             <concrete ref="dfcap.df_register"/>
@@ -106,13 +127,39 @@ package="LaResistenciaAgenteTablero.Tablero"
 				<goals ref="JugarPartida"/>
 			</trigger>
 		</plan>
-		<!-- -->
+		<!-- Plan para avisar a los espias de quienes son los otros espias -->
 		<plan name="AvisarEspias">
 			<body class="AvisarEspiasPlan"/>
 			<trigger>
 				<goals ref="AvisarEspias"/>
 			</trigger>
 		</plan>
+		<!-- Plan para añadir la creencia de los jugadores que forman el equipo-->
+		<!-- No tiene objetivo asociado-->
+		<plan name="EquipoElegido">
+			<body class="EquipoElegidoPlan"/>
+			<trigger>
+				<messageevent ref="Inform_Equipo_elegido"/>
+			</trigger>
+		</plan>
+
+		<!-- Plan para pedirles a los jugadores que voten el equipo-->
+		<plan name="Aprobar_equipo">
+			<body class="AprobarEquipoPlan"/>
+			<trigger>
+				<goals ref="Aprobar_equipo"/>
+			</trigger>
+		</plan>
+
+
+		<!-- Plan para publicar el resultado de la mision, cambiar de ronda, cambiar de lider y aumentar o no las misiones completadas -->
+		<plan name="PublicarVotacionMisionPlan">
+			<body class="PublicarVotacionMisionPlan"/>
+			<trigger>
+				<goals ref="PublicarVotacionMision"/>
+			</trigger>
+		</plan>
+
 	</plans>
 
 	<events>
@@ -175,19 +222,6 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<messageevent name="Agree_Aprobar_equipo" direction="send_receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
-			</parameter>
-			<parameter name="language" class="String" direction="fixed">
-				<value>SFipa.NUGGETS_XML</value>
- 			</parameter>
-			<parameter name="content-class" class="Class" direction="fixed">
-				<value>Aprobar_equipo.class</value>
-			</parameter>
-		</messageevent>
-
-		<!-- Mensaje de respuesta de rechazo para aprobar el equipo-->
-		<messageevent name="Refuse_Aprobar_equipo" direction="send_receive" type="fipa">
-			<parameter name="performative" class="String" direction="fixed">
-				<value>SFipa.REFUSE</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
 				<value>SFipa.NUGGETS_XML</value>
@@ -272,6 +306,19 @@ package="LaResistenciaAgenteTablero.Tablero"
  			</parameter>
 			<parameter name="content-class" class="Class" direction="fixed">
 				<value>Tarjetas_aceptacion_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform equipo elegido -->
+		<messageevent name="Inform_Equipo_elegido" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Equipo_elegido.class</value>
 			</parameter>
 		</messageevent>
 

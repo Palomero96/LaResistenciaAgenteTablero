@@ -29,6 +29,7 @@ public class TableroRegistraJugadorPlan extends Plan
 				IMessageEvent enviar = createMessageEvent("Inform_Tarjetas_personajes_repartidas");
 				Lider_asignado rj = new Lider_asignado;
 				rj.setLider(True);
+				rj.setEquipo(getBeliefbase().getBelief("Equipo1"))
 				enviar.getParameterSet(SFipa.RECEIVERS).addValue(player.getIDAgente());
 				enviar.setContent(rj);
 				sendMessage(enviar);

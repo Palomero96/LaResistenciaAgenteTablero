@@ -6,6 +6,7 @@ import conceptos.*;
 
 public class Lider_asignado implements Predicados {
     private boolean lider;
+    private int equipo;
     
 		public Lider_asignado()
 		{ ; }
@@ -14,5 +15,11 @@ public class Lider_asignado implements Predicados {
        }
        public void setLider(boolean l) {
            lider=l;
+       }
+       public boolean getEquipo() {
+           return equipo;
+       }
+       public void setEquipo(int l) {
+           equipo=l;
        }
 }

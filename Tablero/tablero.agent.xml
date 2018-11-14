@@ -151,14 +151,14 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<plan name="PrepararPartida">
 			<body class="PrepararPartidaPlan"/>
 			<trigger>
-				<goals ref="JugarPartida"/>
+				<goal ref="JugarPartida"/>
 			</trigger>
 		</plan>
 		<!-- Plan para avisar a los espias de quienes son los otros espias -->
 		<plan name="AvisarEspias">
 			<body class="AvisarEspiasPlan"/>
 			<trigger>
-				<goals ref="AvisarEspias"/>
+				<goal ref="AvisarEspias"/>
 			</trigger>
 		</plan>
 		<!-- Plan para añadir la creencia de los jugadores que forman el equipo-->
@@ -174,14 +174,14 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<plan name="Aprobar_equipo">
 			<body class="AprobarEquipoPlan"/>
 			<trigger>
-				<goals ref="Aprobar_equipo"/>
+				<goal ref="Aprobar_equipo"/>
 			</trigger>
 		</plan>
 		<!-- Plan para pedirles a los jugadores que voten el equipo-->
 		<plan name="Vota_mision">
 			<body class="VotarMisionPlan"/>
 			<trigger>
-				<goals ref="VotarMision"/>
+				<goal ref="VotarMision"/>
 			</trigger>
 		</plan>
 
@@ -189,7 +189,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		<plan name="AsignarLider">
 			<body class="AsignarLiderPlan"/>
 			<trigger>
-				<goals ref="Asignar_Lider"/>
+				<goal ref="Asignar_Lider"/>
 			</trigger>
 		</plan>
 
@@ -213,7 +213,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 		
 		<!-- Mensaje de respuesta de aceptacion para Unirse a la partida -->
-		<messageevent name="Agree_unirse_a_partida" direction="send_receive" type="fipa">
+		<messageevent name="Agree_unirse_a_partida" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
 			</parameter>
@@ -226,7 +226,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!-- Mensaje de respuesta de rechazo para Unirse a la partida -->
-		<messageevent name="Refuse_unirse_a_partida" direction="send_receive" type="fipa">
+		<messageevent name="Refuse_unirse_a_partida" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REFUSE</value>
 			</parameter>
@@ -239,20 +239,23 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 		
 		<!--  Request aprobar equipo -->
-		<messageevent name="Request_Aprobar_equipo" direction="receive" type="fipa">
+		<messageevent name="Request_Aprobar_equipo" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
 				<value>SFipa.NUGGETS_XML</value> 
  			</parameter>
+ 			<parameter name="conversation-id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
 			<parameter name="content-class" class="Class" direction="fixed">
 				<value>Aprobar_equipo.class</value>
 			</parameter>
 		</messageevent>
 
 		<!-- Mensaje de respuesta de aceptacion para aprobar el equipo -->
-		<messageevent name="Agree_Aprobar_equipo" direction="send_receive" type="fipa">
+		<messageevent name="Agree_Aprobar_equipo" direction="receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
 			</parameter>
@@ -265,20 +268,23 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Request votar_mision -->
-		<messageevent name="Request_Votar_mision" direction="receive" type="fipa">
+		<messageevent name="Request_Votar_mision" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
 			</parameter>
 			<parameter name="language" class="String" direction="fixed">
 				<value>SFipa.NUGGETS_XML</value> 
  			</parameter>
+ 			<parameter name="conversation-id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
 			<parameter name="content-class" class="Class" direction="fixed">
 				<value>Votar_mision.class</value>
 			</parameter>
 		</messageevent>
 
 		<!-- Mensaje de respuesta de aceptacion para Votar la misión -->
-		<messageevent name="Agree_Votar_mision" direction="send_receive" type="fipa">
+		<messageevent name="Agree_Votar_mision" direction="receive" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
 			</parameter>
@@ -290,8 +296,8 @@ package="LaResistenciaAgenteTablero.Tablero"
 			</parameter>
 		</messageevent>
 		
-		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistentia) -->
-		<messageevent name="Inform_Tarjetas_personajes_repartidas" direction="send_receive" type="fipa">
+		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistencia) -->
+		<messageevent name="Inform_Tarjetas_personajes_repartidas" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -317,7 +323,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!-- Mensaje de respuesta de aceptacion al pedir las tarjetas de equipo -->
-		<messageevent name="Agree_Pedir_tarjetas_equipo" direction="send_receive" type="fipa">
+		<messageevent name="Agree_Pedir_tarjetas_equipo" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
 			</parameter>
@@ -330,7 +336,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform Repartir tarjetas aceptacion a los jugadores -->
-		<messageevent name="Inform_Tarjetas_aceptacion_repartidas" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Tarjetas_aceptacion_repartidas" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -356,7 +362,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform Repartir tarjetas exito/fracaso a los jugadores -->
-		<messageevent name="Inform_Tarjetas_exito_fracaso_repartidas" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Tarjetas_exito_fracaso_repartidas" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -369,7 +375,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform avisar espias -->
-		<messageevent name="Inform_Avisar_espias" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Avisar_espias" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -382,7 +388,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform asignar lider -->
-		<messageevent name="Inform_Lider_asignado" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Lider_asignado" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -395,7 +401,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform resultados Votacion mision -->
-		<messageevent name="Inform_Votacion_publicada_mision" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Votacion_publicada_mision" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>
@@ -408,7 +414,7 @@ package="LaResistenciaAgenteTablero.Tablero"
 		</messageevent>
 
 		<!--  Inform resultados Votacion equipo -->
-		<messageevent name="Inform_Votacion_publicada_equipo" direction="send_receive" type="fipa">
+		<messageevent name="Inform_Votacion_publicada_equipo" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>
 			</parameter>

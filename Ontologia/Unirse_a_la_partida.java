@@ -1,8 +1,6 @@
 
 package acciones;
 
-import conceptos;
-
 
 public class Unirse_a_la_partida implements Accion {
     private Jugador jugador;

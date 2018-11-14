@@ -1,7 +1,6 @@
 
 package acciones;
 
-import conceptos;
 
 
 public class Aprobar_equipo implements Accion {

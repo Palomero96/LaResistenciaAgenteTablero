@@ -1,7 +1,5 @@
 package acciones;
 
-import conceptos;
-
 
 public class Votar_mision implements Accion {
     private Voto voto;

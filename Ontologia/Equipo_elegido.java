@@ -1,7 +1,5 @@
 package predicados;
 
-import conceptos;
-
 
 public class Equipo_elegido implements Predicados {
     private Lista_jugadores lista;

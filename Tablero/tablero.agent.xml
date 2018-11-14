@@ -67,10 +67,22 @@ package="LaResistenciaAgenteTablero.Tablero"
 
 
 		<!-- Creencias que indican que se ha terminado un plan-->
+		<!-- Para saber cuando se acabe el plan preparar partida-->
 		<belief name="Preparada" class="boolean">
-			<fact>False</fact>
+			<fact>false</fact>
 		</belief>
-
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="ResultadoEquipo" class="boolean">
+			<fact>false</fact>
+		</belief>
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="VotacionEquipoRealizada" class="boolean">
+			<fact>false</fact>
+		</belief>
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="VotacionMisionRealizada" class="boolean">
+			<fact>false</fact>
+		</belief>
 	</beliefs>
 	
 	<goals>
@@ -104,6 +116,21 @@ package="LaResistenciaAgenteTablero.Tablero"
 			$beliefbase.Equipo != null
 			</contextcondition>
 		</performgoal>
+		<!-- Objetivo de publicar la votacion de mision-->
+		<performgoal name="VotarMision" exclude="never">
+			<contextcondition>
+			<!-- Que se active cuando el equipo este en las creencias-->
+			$beliefbase.ResultadoEquipo == true
+			</contextcondition>
+		</performgoal>
+		<!-- Objetivo para asignar un lider-->
+		<performgoal name="Asignar_Lider" exclude="never">
+			<contextcondition>
+			<!-- Que se active cuando el equipo este en las creencias-->
+			$beliefbase.VotacionMisionRealizada == true || $beliefbase.VotacionEquipoRealizada == true
+			</contextcondition>
+		</performgoal>
+
 		<!-- Objetivo para que el agente tablero se registre -->
 	    <achievegoalref name="df_register">
             <concrete ref="dfcap.df_register"/>
@@ -150,13 +177,19 @@ package="LaResistenciaAgenteTablero.Tablero"
 				<goals ref="Aprobar_equipo"/>
 			</trigger>
 		</plan>
-
+		<!-- Plan para pedirles a los jugadores que voten el equipo-->
+		<plan name="Vota_mision">
+			<body class="VotarMisionPlan"/>
+			<trigger>
+				<goals ref="VotarMision"/>
+			</trigger>
+		</plan>
 
 		<!-- Plan para publicar el resultado de la mision, cambiar de ronda, cambiar de lider y aumentar o no las misiones completadas -->
-		<plan name="PublicarVotacionMisionPlan">
-			<body class="PublicarVotacionMisionPlan"/>
+		<plan name="AsignarLider">
+			<body class="AsignarLiderPlan"/>
 			<trigger>
-				<goals ref="PublicarVotacionMision"/>
+				<goals ref="Asignar_Lider"/>
 			</trigger>
 		</plan>
 

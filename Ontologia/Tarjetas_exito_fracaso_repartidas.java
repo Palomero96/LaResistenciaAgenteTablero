@@ -3,14 +3,14 @@ import java.util.List;
 import conceptos.*;
 
 public class Tarjetas_exito_fracaso_repartidas implements Predicados {
-    private List<Tarjeta> lista;
+    private boolean mision;
     
 		public Tarjetas_exito_fracaso_repartidas()
 		{ ; }
-      public List<Tarjeta> getTarjetas() {
-           return lista;
+      public boolean getTarjetas() {
+           return mision;
        }
-       public void setTarjetas(List<Tarjeta> l) {
-    	   lista=l;
+       public void setTarjetas(boolean l) {
+    	   mision=l;
        }
 }

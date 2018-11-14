@@ -6,7 +6,7 @@ public class Lista_Jugadores implements Concepto {
 private List<Jugadores> jugadores; 
 	public Lista_Jugadores()
 	{ ; }
-       public boolean getjugadores() {
+       public List<Jugadores> getjugadores() {
            return jugadores;
        }
        public void setjugadores(List<Jugadores> a) {

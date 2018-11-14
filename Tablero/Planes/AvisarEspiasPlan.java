@@ -3,8 +3,8 @@ import jadex.adapter.fipa.*;
 import jadex.runtime.IMessageEvent;
 import jadex.runtime.Plan;
 
-/**
- *  PLan para unir a un jugador a la partida
+/** Acabado
+ *  Plan para avisar a los espias de quien son los otos espias 
  */
 public class AvisarEspiasPlan extends Plan
 {
@@ -15,7 +15,7 @@ public class AvisarEspiasPlan extends Plan
 		Lista_Jugadores espias = new Lista_Jugadores();
 		//Buscamos a los jugadores espias y los vamos almacenando en una lista
 		for(int i=0; i< jugadores.size(); i++){
-			if(jugadores.get(i).getEspia == True){
+			if(jugadores.get(i).getEspia == true){
 				espias.add(jugadores.get(i));
 			}
 		}

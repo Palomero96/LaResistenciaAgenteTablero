@@ -2,8 +2,8 @@ import jadex.adapter.fipa.*;
 import jadex.runtime.IMessageEvent;
 import jadex.runtime.Plan;
 
-/**
- *  PLan para unir a un jugador a la partida
+/**	Acabado
+ *  Plan para conocer el posible equipo que ira a la mision
  */
 public class EquipoElegidoPlan extends Plan
 {

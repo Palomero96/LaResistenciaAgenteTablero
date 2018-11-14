@@ -17,7 +17,7 @@ public class RepartirTarjetasEquipoPlan extends Plan
 
 		//Buscamos a los jugadores espias y los vamos almacenando en una lista
 		for(int i=0; i< jugadores.size(); i++){
-			if(jugadores.get(i).getLider == True){
+			if(jugadores.get(i).getLider == true){
 				lider = jugadores.get(i);
 				break;
 			}

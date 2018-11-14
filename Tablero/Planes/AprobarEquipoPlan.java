@@ -9,6 +9,7 @@ import jadex.runtime.Plan;
 import ontologia.conceptos.*;
 import ontologia.predicados.*;
 import ontologia.acciones.*;
+import ontologia.*;
 
 /**
  *  Plan para pedir un equipo al lider y
@@ -33,8 +34,7 @@ public class AprobarEquipoPlan extends Plan
 			request.getParameterSet(SFipa.RECEIVERS).addValue(equipo.getjugadores().get(i).getIDAgente());
 			sendMessageAndWait(request, 10000);
 			
-			// TODO: Revisar como obtener el objeto de una supuesta Reply
-			// o confirmar que ha llegado dicha Reply
+			// Una vez recibido el reply
 			accionAprobarEquipo = (Aprobar_equipo) request.getContent();
 			getBeliefbase().getBeliefSet("votosequipo").addFact(accionAprobarEquipo.getvoto());
 		
@@ -55,11 +55,6 @@ public class AprobarEquipoPlan extends Plan
 			System.out.println("Equipo no aprobado");
 			int votacionesRechazadas = (int) getBeliefbase().getBelief("VotacionesRechazadas").getFact();
 			++votacionesRechazadas;
-			/*si se rechazan 5 votaciones de equipo ganan los espias. Habrá que crear protocolos de partida ganada/perdida
-			if{
-				votacionesRechazadas==5;
-				//sendMessage(partida_perdida);
-			}*/
 
 			getBeliefbase().getBelief("VotacionesRechazadas").setFact(votacionesRechazadas);
 
@@ -76,6 +71,21 @@ public class AprobarEquipoPlan extends Plan
 			informVotacion.getParameterSet(SFipa.RECEIVERS).addValue(equipo.getjugadores().get(i).getIDAgente());
 			informVotacion.setContent(votacion);
 			sendMessage(informVotacion);			
-		}		
+		}	
+		
+		//si se rechazan 5 votaciones de equipo ganan los espias. Habrá que crear protocolos de partida ganada/perdida
+		if(votacionesRechazadas == 5) {
+			PartidaFinalizada finPartida = new PartidaFinalizada();
+			finPartida.setGanaResistencia(false);
+			
+			for (int i = 0; i < jugadores.getjugadores().size(); i++) {				
+				IMessageEvent informFinalPartida = createMessageEvent("Inform_Partida_Finalizada");
+				informFinalPartida.getParameterSet(SFipa.RECEIVERS).addValue(equipo.getjugadores().get(i).getIDAgente());
+				informFinalPartida.setContent(finPartida);
+				sendMessage(informFinalPartida);			
+			}	
+			
+			getBeliefbase().getBelief("Preparada").setFact(false);		
+		}
 	}
 }

@@ -425,6 +425,19 @@ package="LaResistenciaAgenteTablero.Tablero"
 				<value>Votacion_publicada_equipo.class</value>
 			</parameter>
 		</messageevent>
+		
+		<!--  Inform sobre los ganadores al finalizar la partida -->
+		<messageevent name="Inform_Partida_Finalizada" direction="send" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Boolean" direction="fixed">
+				<value>Partida_Finalizada.class</value>
+			</parameter>
+		</messageevent>
 
 	</events>
 

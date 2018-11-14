@@ -20,13 +20,14 @@ public class TableroRegistraJugadorPlan extends Plan
 		player.setAgentID((AgentIdentifier)request.getParameter("sender").getValue());
 		getLogger().info("New player "+player);
 		Lista_Jugadores jugadores = getBeliefbase().getBeliefSet("jugadores");
-		if (jugadores.size() < 8) {
-			player.setLider(False);
-			if(jugadores.isEmpty()){
+		List<Jugador> lista = jugadores.getjugadores();
+		if (lista.getjugadores().size() < 8) {
+			player.setLider(false);
+			if(lista.getjugadores().isEmpty()){
 				//Si el jugador es el primero que se une a la partida se le asigna como lider
-				player.setLider(True)
+				player.setLider(true)
 				//Le enviamos al lider el mensaje de que es lider
-				IMessageEvent enviar = createMessageEvent("Inform_Tarjetas_personajes_repartidas");
+				IMessageEvent enviar = createMessageEvent("Inform_Lider_asignado");
 				Lider_asignado rj = new Lider_asignado;
 				rj.setLider(True);
 				rj.setEquipo(getBeliefbase().getBelief("Equipo1"))
@@ -35,7 +36,8 @@ public class TableroRegistraJugadorPlan extends Plan
 				sendMessage(enviar);
 			}
 			player.setEspia(False);
-			jugadores.add(player);
+			lista.add(player);
+			jugadores.setjugadores(lista);
 			getBeliefbase().getBeliefSet("jugadores").setFact(jugadores);
 		//Creamos la respuesta para enviar al usuario/jugador
 		Unirse_a_la_Partida rj = new Unirse_a_la_Partida(rj);

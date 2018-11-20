@@ -1,0 +1,464 @@
+<agent xmlns="http://jadex.sourceforge.net/jadex"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://jadex.sourceforge.net/jadex
+http://jadex.sourceforge.net/jadex-0.96.xsd"
+name="jugador"
+package="src.jugador"
+>
+	<imports>
+		<import>jadex.runtime.*</import>
+		<import>jadex.planlib.*</import>
+		<import>jadex.adapter.fipa.*</import>
+		<import>java.util.logging.*</import>
+		<import>java.util.*</import>
+		<import>jadex.util.*</import>
+		<import>jugador.planes.*</import>		
+	    <import>ontologia.acciones.*</import>
+	    <import>ontologia.conceptos.*</import>
+	    <import>ontologia.predicados.*</import>
+
+	</imports>
+
+	<capabilities>
+	    <capability name="dfcap" file="jadex.planlib.DF"/>
+	</capabilities>
+
+	<beliefs>
+		<!-- Este beliefset debe ser privado, no puede tenerlo el jugador, solo puede ver los rechazos o aprobaciones
+			totales, no quién vota cada cosa. Revisar que está bien restringido en el agente tablero-->
+		<!-- Para almacenar los votos del equipo -->
+		<!-- <beliefset name="votosequipo" class="Voto"/> -->
+			
+		<!-- Para almacenar los votos del mision -->
+		<beliefset name="votosmision" class="Voto"/>
+		
+		<!-- El AgentID del jugador -->
+		<belief name="tablero" class="AgentIdentifier">
+			<fact>new AgentIdentifier()</fact>
+		</belief>
+		
+		<!-- El jugador con sus roles -->
+		<belief name="jugador" class="Jugador">
+			<fact>new Jugador()</fact>
+		</belief>
+		
+		<!-- Los jugadores -->
+		<belief name="jugadores" class="Lista_Jugadores">
+			<fact>new Lista_Jugadores()</fact>
+		</belief>
+
+		<!-- Los espias, se saben si el jugador también es espia -->
+		<belief name="espias" class="Lista_Jugadores">
+			<fact>null</fact>
+		</belief>
+		<!-- Los espias, se saben si el jugador también es espia -->
+		<belief name="soy_Espia" class="boolean">
+			<fact>false</fact>
+		</belief>
+
+		<!-- Jugadores que van a ir a la mision -->
+		<belief name="Equipo" class="Lista_Jugadores">
+			<fact>new Lista_Jugadores()</fact>
+		</belief>
+		
+		<!-- Representacion de la ronda en la que estamos-->
+		<belief name="Ronda" class="int">
+			<fact>1</fact>
+		</belief>
+
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda1-->
+		<belief name="Equipo1" class="int">
+			<fact>2</fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda2-->
+		<belief name="Equipo2" class="int">
+			<fact>3</fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda3-->
+		<belief name="Equipo3" class="int">
+			<fact>3</fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda4-->
+		<belief name="Equipo4" class="int">
+			<fact>4</fact>
+		</belief>
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda5-->
+		<belief name="Equipo5" class="int">
+			<fact>4</fact>
+		</belief>
+		<!-- Representacion de el numero de votaciones-->
+		<belief name="VotacionesRechazadas" class="int">
+			<fact>0</fact>	
+		</belief>
+		<!-- Representacion de el numero de misiones que se han completado-->
+		<belief name="MisionesCompletadas" class="int">
+			<fact>0</fact>	
+		</belief>
+
+
+		<!-- Creencias que indican que se ha terminado un plan-->
+		<!-- Para saber cuando se acabe el plan preparar partida-->
+		<belief name="Preparada" class="boolean">
+			<fact>false</fact>
+		</belief>
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="ResultadoEquipo" class="boolean">
+			<fact>false</fact>
+		</belief>
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="VotacionEquipoRealizada" class="boolean">
+			<fact>false</fact>
+		</belief>
+		<!-- Para saber cuando se acaba el plan aprobarequipo-->
+		<belief name="VotacionMisionRealizada" class="boolean">
+			<fact>false</fact>
+		</belief>
+	</beliefs>
+	
+	<goals>
+		
+			<!-- Objetivo de publicar la votacion de mision-->
+		<performgoal name="VotarMision" exclude="never" recur="true">
+			<contextcondition>
+			<!-- Que se active cuando el equipo este en las creencias-->
+			$beliefbase.ResultadoEquipo == true
+			</contextcondition>
+		</performgoal>
+
+		<!-- Objetivo para asignar un lider-->
+		<performgoal name="Asignar_Lider" exclude="never" recur="true">
+			<contextcondition>
+			<!-- Que se active cuando el equipo este en las creencias-->
+			$beliefbase.VotacionMisionRealizada == true || $beliefbase.VotacionEquipoRealizada == true
+			</contextcondition>
+		</performgoal>
+		
+		<!-- Objetivo para que el agente tablero se registre -->
+	    <achievegoalref name="df_register">
+            <concrete ref="dfcap.df_register"/>
+        </achievegoalref>
+	<!-- OK -->
+		<achievegoal name="unirsePartida">
+	
+		<!-- <targetcondition>
+				$beliefbase.id_jugador.toString().equals($goal.id_agente.toString())
+			</targetcondition> -->	
+		</achievegoal>
+		
+		
+		<!-- Used to search for the dealer. -->
+		<achievegoalref name="df_search">
+			<concrete ref="dfcap.df_search"/>
+		</achievegoalref>
+	</goals>
+
+	<plans> 
+		<!-- Unirse a partida -->
+		<plan name="UnirsePartida">
+			<body class="UnirsePartidaPlan"/>
+			<trigger>
+				<goal ref="unirsePartida"/>
+			</trigger>
+		</plan>
+		
+				<!-- Avisado Espias -->
+		<plan name="AvisadoEspias">
+			<body class="AvisadoEspiasPlan"/>
+			<trigger>
+				<messageevent ref="Inform_Avisar_espias"/>
+			</trigger>
+		</plan>
+
+	<!-- Info -->
+		<plan name="InfoJugador">
+			<body class="InfoJugadorPlan"/>
+			<trigger>
+				<messageevent ref="Agree_unirse_a_partida"/>
+			</trigger>
+		</plan>
+
+	<!-- Info partida -->
+		<plan name="InfoPartida">
+			<body class="InfoPartidaPlan"/>
+			<trigger>
+				<messageevent ref="Inform_ListaJugadores"/>
+			</trigger>
+		</plan>
+		<!-- Info partida -->
+		<plan name="ElegirEquipo">
+			<body class="ElegirEquipoPlan"/>
+			<trigger>
+				<messageevent ref="Inform_Lider_asignado"/>
+			</trigger>
+		</plan>
+		<plan name="VotarMision">
+			<body class="VotarMisionPlan"/>
+			<trigger>
+				<messageevent ref="Request_Votar_mision"/>
+			</trigger>
+		</plan>
+
+
+		<!-- Info partida -->
+		<plan name="Aprobar_Equipo">
+			<body class="AprobarEquipoPlan"/>
+			<trigger>
+				<messageevent ref="Request_Aprobar_equipo"/>
+			</trigger>
+		</plan>
+
+	</plans>
+
+	<events>
+		<!-- Mensajes de Jugadores-->
+
+		<!-- Un jugador solicita unirse a la partida -->
+		<messageevent name="Request_unirsepartida" direction="send" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+ 			</parameter>
+ 			 <parameter name="conversation-id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Unirse_a_la_partida.class</value>
+			</parameter>
+		</messageevent>
+		
+				<!-- Mensaje de respuesta de aceptacion para Unirse a la partida -->
+		<messageevent name="Agree_unirse_a_partida" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Unirse_a_la_partida.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de rechazo para Unirse a la partida -->
+		<messageevent name="Refuse_unirse_a_partida" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REFUSE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Unirse_a_la_partida.class</value>
+			</parameter>
+		</messageevent>
+		
+		<!--  Request aprobar equipo -->
+		<messageevent name="Request_Aprobar_equipo" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+			</parameter>
+			<parameter name="conversation-id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Aprobar_equipo.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de aceptacion para aprobar el equipo -->
+		<messageevent name="Agree_Aprobar_equipo" direction="send" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Aprobar_equipo.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Request votar_mision -->
+		<messageevent name="Request_Votar_mision" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value> 
+ 			</parameter>
+ 			<parameter name="conversation-id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votar_mision.class</value>
+			</parameter>
+		</messageevent>
+
+		<!-- Mensaje de respuesta de aceptacion para Votar la misión -->
+		<messageevent name="Agree_Votar_mision" direction="send" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votar_mision.class</value>
+			</parameter>
+		</messageevent>
+		
+		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistencia) -->
+		<messageevent name="Inform_Tarjetas_personajes_repartidas" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_personajes_repartidas.class</value>
+			</parameter>
+		</messageevent>
+				<!--  Inform para enviar a los jugadores la lista con los jugadores de la partida-->
+		<messageevent name="Inform_ListaJugadores" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>InformacionPartidaEnviada.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform Repartir tarjetas aceptacion a los jugadores -->
+		<messageevent name="Inform_Tarjetas_aceptacion_repartidas" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_aceptacion_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform equipo elegido -->
+		<messageevent name="Inform_Equipo_elegido" direction="send_receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Equipo_elegido.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform Repartir tarjetas exito/fracaso a los jugadores -->
+		<messageevent name="Inform_Tarjetas_exito_fracaso_repartidas" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Tarjetas_exito_fracaso_repartidas.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform avisar espias -->
+		<messageevent name="Inform_Avisar_espias" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Avisar_espias.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform asignar lider -->
+		<messageevent name="Inform_Lider_asignado" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Lider_asignado.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform resultados Votacion mision -->
+		<messageevent name="Inform_Votacion_publicada_mision" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votacion_publicada_mision.class</value>
+			</parameter>
+		</messageevent>
+
+		<!--  Inform resultados Votacion equipo -->
+		<messageevent name="Inform_Votacion_publicada_equipo" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Votacion_publicada_equipo.class</value>
+			</parameter>
+		</messageevent>
+		
+		<!--  Inform sobre los ganadores al finalizar la partida -->
+		<messageevent name="Inform_Partida_Finalizada" direction="receive" type="fipa">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.NUGGETS_XML</value>
+ 			</parameter>
+			<parameter name="content-class" class="Class" direction="fixed">
+				<value>Partida_Finalizada.class</value>
+			</parameter>
+		</messageevent>
+
+	</events>
+
+	<properties>
+	</properties>
+	<configurations>
+	    <configuration name="default">
+            <goals>
+                <initialgoal ref="df_register">
+                    <parameter ref="description">
+                        <value>
+							SFipa.createAgentDescription(null,SFipa.createServiceDescription("jugador", "agente", "LaResistencia"))
+                        </value>
+                    </parameter>
+				</initialgoal>
+                  <!-- Revisar lo del unirsePartida-->  
+                <initialgoal ref="unirsePartida">                   
+                </initialgoal>
+            </goals>
+        </configuration>
+    </configurations>
+</agent>

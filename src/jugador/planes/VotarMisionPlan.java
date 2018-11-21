@@ -23,7 +23,6 @@ public class VotarMisionPlan extends Plan
 	
 	public void body()
 	{		
-		System.out.println("DENTRO DEL PLAN VOTAR MISION JUGADOR");
 		IMessageEvent request	= (IMessageEvent)getInitialEvent();
 
 		boolean soyEspia = (boolean) getBeliefbase().getBelief("soy_Espia").getFact();
@@ -39,7 +38,7 @@ public class VotarMisionPlan extends Plan
 			Votar_mision votar_mision = new Votar_mision();
 			Voto voto = new Voto();
 			votar_mision.setVoto(voto);
-			votar_mision.getvoto().setmision(false);
+			votar_mision.getvoto().setmision(true);
 			IMessageEvent  reply = request.createReply("Agree_Votar_mision", votar_mision);		
 			sendMessage(reply);
 		}

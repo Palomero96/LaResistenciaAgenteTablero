@@ -38,25 +38,22 @@ public class VotarMisionPlan extends Plan
 			sendTarjeta.getParameterSet(SFipa.RECEIVERS).addValue(equipo.getjugadores().get(i).getIDAgente());
 			sendTarjeta.setContent(tarjeta);
 			System.out.println(tarjeta);
-			System.out.println(tarjeta.getTarjetas());
 			sendMessage(sendTarjeta);
 
 			//Le enviamos las tarjetas para aprobar el equipo
-			System.out.println("ANTES DE CREAR REQUEST");
 			IMessageEvent request = createMessageEvent("Request_Votar_mision");
 			request.getParameterSet(SFipa.RECEIVERS).addValue(equipo.getjugadores().get(i).getIDAgente());
 			Votar_mision votar_mision = new Votar_mision();
 			request.setContent(votar_mision);
-			System.out.println("ANTES DE MANDAR REQUEST");
 			IMessageEvent reply = sendMessageAndWait(request, 10000);
-			System.out.println("DESPUES DE RECIBIR REQUEST");
 
 			
 			// Preguntar por la respuesta
 			votar_mision = (Votar_mision) reply.getContent();
-			getBeliefbase().getBeliefSet("votosmision").addFact(votar_mision.getvoto());
-		
-			if (!votar_mision.getvoto().getmision()) {
+			System.out.println("El jugador ha votado " + votar_mision.getvoto().getmision());
+
+			
+			if (votar_mision.getvoto().getmision()==false) {
 				++fracasos;
 			}else{
 				++exitos;
@@ -78,27 +75,6 @@ public class VotarMisionPlan extends Plan
 		}
 		 int NumRonda = (int) getBeliefbase().getBelief("Ronda").getFact();
 		 Partida_Finalizada finPartida = new Partida_Finalizada();
-		
-		if((int) getBeliefbase().getBelief("MisionesCompletadas").getFact()==3){
-			finPartida.setGanaResistencia(true);
-			for (int i = 0; i < listajugadores.size(); i++) {
-				IMessageEvent informFinPartida = createMessageEvent("Inform_Partida_Finalizada");
-				informFinPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
-				informFinPartida.setContent(finPartida);
-				sendMessage(informFinPartida);
-			}
-			System.out.println("GANAN LA RESISTENCIA");
-		}
-		if((NumRonda - ((int) getBeliefbase().getBelief("MisionesCompletadas").getFact()))==3){
-			finPartida.setGanaResistencia(false);
-			for (int i = 0; i < listajugadores.size(); i++) {
-				IMessageEvent informFinPartida = createMessageEvent("Inform_Partida_Finalizada");
-				informFinPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
-				informFinPartida.setContent(finPartida);
-				sendMessage(informFinPartida);
-			}
-			System.out.println("GANAN LOS ESPIAS");
-		}
 
 		Votacion_publicada_equipo votacion = new Votacion_publicada_equipo();
 		votacion.setResultado(resultVotos);
@@ -114,15 +90,39 @@ public class VotarMisionPlan extends Plan
 		int ronda = (int) getBeliefbase().getBelief("Ronda").getFact();
 		
 		ronda = ronda+1;
+		if(ronda>5){
+			getBeliefbase().getBelief("FinPartida").setFact(true);
+		}
+			
+		System.out.println("FIN VOTAR MISION");
+		if((int) getBeliefbase().getBelief("MisionesCompletadas").getFact()==3){
+			finPartida.setGanaResistencia(true);
+			for (int i = 0; i < listajugadores.size(); i++) {
+				IMessageEvent informFinPartida = createMessageEvent("Inform_Partida_Finalizada");
+				informFinPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
+				informFinPartida.setContent(finPartida);
+				sendMessage(informFinPartida);
+			}
+			System.out.println("GANAN LA RESISTENCIA");
+			getBeliefbase().getBelief("FinPartida").setFact(true);
+
+		}
+		if((NumRonda - ((int) getBeliefbase().getBelief("MisionesCompletadas").getFact()))==3){
+			finPartida.setGanaResistencia(false);
+			for (int i = 0; i < listajugadores.size(); i++) {
+				IMessageEvent informFinPartida = createMessageEvent("Inform_Partida_Finalizada");
+				informFinPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
+				informFinPartida.setContent(finPartida);
+				sendMessage(informFinPartida);
+			}
+			System.out.println("GANAN LOS ESPIAS");
+			getBeliefbase().getBelief("FinPartida").setFact(true);
+		}
 		getBeliefbase().getBelief("Ronda").setFact(ronda);
 		getBeliefbase().getBelief("LiderAsignado").setFact(false);
 		getBeliefbase().getBelief("VotacionesRechazadas").setFact(0);
-		// Para cumplir target condition
 		getBeliefbase().getBelief("ResultadoEquipo").setFact(false);
-		System.out.println("FIN VOTAR MISION");
 		getBeliefbase().getBelief("VotacionMisionRealizada").setFact(true);
-		
 
-		System.out.println("DESPUES DE ACABAR ENTERO EL PLAN VOTAR MISION");
 	}
 }

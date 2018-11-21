@@ -59,12 +59,23 @@ public class AprobarEquipoPlan extends Plan
 			++votacionesRechazadas;
 
 			getBeliefbase().getBelief("VotacionesRechazadas").setFact(votacionesRechazadas);
-
-			resultVotos.setResultadoequipo(false);
+			if(votacionesRechazadas == 5) {
+			Partida_Finalizada finPartida = new Partida_Finalizada();
+			finPartida.setGanaResistencia(false);
 			
+			for (int i = 0; i < jugadores.getjugadores().size(); i++) {				
+				IMessageEvent informFinalPartida = createMessageEvent("Inform_Partida_Finalizada");
+				informFinalPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
+				informFinalPartida.setContent(finPartida);
+				sendMessage(informFinalPartida);			
+			}	
+			System.out.println("GANAN LOS ESPIAS");
+			getBeliefbase().getBelief("Preparada").setFact(false);
+			getBeliefbase().getBelief("FinPartida").setFact(true);		
+		
+		}
+			resultVotos.setResultadoequipo(false);
 			getBeliefbase().getBelief("LiderAsignado").setFact(false);
-
-	
 		}
 
 		Votacion_publicada_equipo votacion = new Votacion_publicada_equipo();
@@ -76,21 +87,6 @@ public class AprobarEquipoPlan extends Plan
 			informVotacion.setContent(votacion);
 			sendMessage(informVotacion);			
 		}	
-		
-		//si se rechazan 5 votaciones de equipo ganan los espias. Habrá que crear protocolos de partida ganada/perdida
-		if(votacionesRechazadas == 5) {
-			Partida_Finalizada finPartida = new Partida_Finalizada();
-			finPartida.setGanaResistencia(false);
-			
-			for (int i = 0; i < jugadores.getjugadores().size(); i++) {				
-				IMessageEvent informFinalPartida = createMessageEvent("Inform_Partida_Finalizada");
-				informFinalPartida.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
-				informFinalPartida.setContent(finPartida);
-				sendMessage(informFinalPartida);			
-			}	
-			System.out.println("GANAN LOS ESPIAS");
-			getBeliefbase().getBelief("Preparada").setFact(false);		
-		}System.out.println("FIN APROBAREQUIPO");
 		getBeliefbase().getBelief("ActivarAprobarEquipo").setFact(false);
 		getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(true);
 		

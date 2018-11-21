@@ -24,14 +24,6 @@ package="src.jugador"
 	</capabilities>
 
 	<beliefs>
-		<!-- Este beliefset debe ser privado, no puede tenerlo el jugador, solo puede ver los rechazos o aprobaciones
-			totales, no quién vota cada cosa. Revisar que está bien restringido en el agente tablero-->
-		<!-- Para almacenar los votos del equipo -->
-		<!-- <beliefset name="votosequipo" class="Voto"/> -->
-			
-		<!-- Para almacenar los votos del mision -->
-		<beliefset name="votosmision" class="Voto"/>
-		
 		<!-- El AgentID del jugador -->
 		<belief name="tablero" class="AgentIdentifier">
 			<fact>new AgentIdentifier()</fact>
@@ -60,89 +52,15 @@ package="src.jugador"
 		<belief name="Equipo" class="Lista_Jugadores">
 			<fact>new Lista_Jugadores()</fact>
 		</belief>
-		
-		<!-- Representacion de la ronda en la que estamos-->
-		<belief name="Ronda" class="int">
-			<fact>1</fact>
-		</belief>
-
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda1-->
-		<belief name="Equipo1" class="int">
-			<fact>2</fact>
-		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda2-->
-		<belief name="Equipo2" class="int">
-			<fact>3</fact>
-		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda3-->
-		<belief name="Equipo3" class="int">
-			<fact>3</fact>
-		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda4-->
-		<belief name="Equipo4" class="int">
-			<fact>4</fact>
-		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda5-->
-		<belief name="Equipo5" class="int">
-			<fact>4</fact>
-		</belief>
-		<!-- Representacion de el numero de votaciones-->
-		<belief name="VotacionesRechazadas" class="int">
-			<fact>0</fact>	
-		</belief>
-		<!-- Representacion de el numero de misiones que se han completado-->
-		<belief name="MisionesCompletadas" class="int">
-			<fact>0</fact>	
-		</belief>
-
-
-		<!-- Creencias que indican que se ha terminado un plan-->
-		<!-- Para saber cuando se acabe el plan preparar partida-->
-		<belief name="Preparada" class="boolean">
-			<fact>false</fact>
-		</belief>
-		<!-- Para saber cuando se acaba el plan aprobarequipo-->
-		<belief name="ResultadoEquipo" class="boolean">
-			<fact>false</fact>
-		</belief>
-		<!-- Para saber cuando se acaba el plan aprobarequipo-->
-		<belief name="VotacionEquipoRealizada" class="boolean">
-			<fact>false</fact>
-		</belief>
-		<!-- Para saber cuando se acaba el plan aprobarequipo-->
-		<belief name="VotacionMisionRealizada" class="boolean">
-			<fact>false</fact>
-		</belief>
 	</beliefs>
 	
 	<goals>
-		
-			<!-- Objetivo de publicar la votacion de mision-->
-		<performgoal name="VotarMision" exclude="never" recur="true">
-			<contextcondition>
-			<!-- Que se active cuando el equipo este en las creencias-->
-			$beliefbase.ResultadoEquipo == true
-			</contextcondition>
-		</performgoal>
-
-		<!-- Objetivo para asignar un lider-->
-		<performgoal name="Asignar_Lider" exclude="never" recur="true">
-			<contextcondition>
-			<!-- Que se active cuando el equipo este en las creencias-->
-			$beliefbase.VotacionMisionRealizada == true || $beliefbase.VotacionEquipoRealizada == true
-			</contextcondition>
-		</performgoal>
-		
 		<!-- Objetivo para que el agente tablero se registre -->
 	    <achievegoalref name="df_register">
             <concrete ref="dfcap.df_register"/>
         </achievegoalref>
 	<!-- OK -->
 		<achievegoal name="unirsePartida">
-	
-		<!-- <targetcondition>
-				$beliefbase.id_jugador.toString().equals($goal.id_agente.toString())
-			</targetcondition> -->	
 		</achievegoal>
 		
 		

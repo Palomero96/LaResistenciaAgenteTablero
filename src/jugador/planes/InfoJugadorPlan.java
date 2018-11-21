@@ -25,7 +25,7 @@ public class InfoJugadorPlan extends Plan
 		Unirse_a_la_partida rj = (Unirse_a_la_partida) inform.getContent();
 		Jugador jugador = (Jugador) rj.getjugador();
 		getBeliefbase().getBelief("jugador").setFact(jugador);
-		System.out.println("Soy un jugador y añado la información de mi mismo en la base de creencias.");
+		System.out.println("Soy un jugador y guardo mi informacion a la base de creencias.");
 	}
 
 }

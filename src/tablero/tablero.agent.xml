@@ -102,6 +102,11 @@ package="src.tablero"
 		<belief name="VotacionMisionRealizada" class="boolean">
 			<fact>false</fact>
 		</belief>
+		<belief name="FinPartida" class="boolean">
+			<fact>false</fact>
+		</belief>
+
+
 	</beliefs>
 	
 	<goals>
@@ -125,7 +130,7 @@ package="src.tablero"
 		<achievegoal name="Aprobar_equipo" exclude="when_succeeded"  recur="true" >
 			<creationcondition>
 				<!-- Que se active cuando el equipo este en las creencias y no se haya realizado la votación-->
-				($beliefbase.ActivarAprobarEquipo == true &amp;&amp; $beliefbase.VotacionEquipoRealizada != true)
+				($beliefbase.ActivarAprobarEquipo == true &amp;&amp; $beliefbase.VotacionEquipoRealizada != true &amp;&amp; $beliefbase.FinPartida==false)
 			</creationcondition>
 			<targetcondition>
 				$beliefbase.VotacionEquipoRealizada == true
@@ -135,7 +140,7 @@ package="src.tablero"
 		<achievegoal name="VotarMision" exclude="when_succeeded" recur="true">
 			<creationcondition>
 				<!-- Que se active cuando el equipo este en las creencias-->
-				$beliefbase.ResultadoEquipo == true &amp;&amp; $beliefbase.VotacionMisionRealizada != true
+				$beliefbase.ResultadoEquipo == true &amp;&amp; $beliefbase.VotacionMisionRealizada != true &amp;&amp; $beliefbase.FinPartida==false
 			</creationcondition>
 			<targetcondition>
 				$beliefbase.VotacionMisionRealizada == true
@@ -147,7 +152,7 @@ package="src.tablero"
 		<performgoal name="Asignar_Lider" exclude="when_succeeded">
 			<creationcondition>
 				<!-- Que se active cuando el equipo este en las creencias-->
-				$beliefbase.LiderAsignado == false &amp;&amp; 6 > $beliefbase.Ronda
+				$beliefbase.LiderAsignado == false &amp;&amp; $beliefbase.FinPartida==false
 			</creationcondition>
 		</performgoal>
 

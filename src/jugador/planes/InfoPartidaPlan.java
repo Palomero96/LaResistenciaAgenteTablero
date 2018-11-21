@@ -27,7 +27,7 @@ public class InfoPartidaPlan extends Plan
 		Lista_Jugadores jugadores = (Lista_Jugadores) rj.getLista_jugadores();
 		getBeliefbase().getBelief("tablero").setFact((AgentIdentifier)inform.getParameter("sender").getValue());
 		getBeliefbase().getBelief("jugadores").setFact(jugadores);
-		System.out.println("Soy un jugador y añado la información de quienes son los jugadores de la partida en la base de creencias.");
+		System.out.println("Soy un jugador y guardo la informacion de quienes son los jugadores de la partida en la base de creencias.");
 	}
 
 }

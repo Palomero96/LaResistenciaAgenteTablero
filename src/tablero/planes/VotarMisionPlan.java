@@ -21,6 +21,7 @@ public class VotarMisionPlan extends Plan
 	
 	public void body()
 	{
+/* Se obtiene la lista de jugadores que participan en la mision */
 		System.out.println("Votar_mision lanzado");
 		Lista_Jugadores jugadores = (Lista_Jugadores) getBeliefbase().getBelief("jugadores").getFact();
 		Lista_Jugadores equipo = (Lista_Jugadores) getBeliefbase().getBelief("Equipo").getFact();
@@ -28,7 +29,8 @@ public class VotarMisionPlan extends Plan
 		List<Jugador> listaequipo = equipo.getjugadores();
 		// Reset de votos de equipo en las creencias
 		getBeliefbase().getBeliefSet("votosmision").removeFacts();
-				
+		
+/* Se reparten las cartas de exito/fracaso a los agentes en mision y se inicializan los contadores de voto */		
 		int fracasos = 0;
 		int exitos = 0;
 		for (int i = 0; i < listaequipo.size(); i++ ) {
@@ -62,6 +64,7 @@ public class VotarMisionPlan extends Plan
 		
 		Resultado resultVotos = new Resultado();
 		
+/* Se informa de los resultados de la mision */
 		if (fracasos>0) {
 			System.out.println("Mision Fracasada");
 			resultVotos.setResultadomision(false);
@@ -89,6 +92,7 @@ public class VotarMisionPlan extends Plan
 			sendMessage(informVotacion);
 		}
 
+/* Actualizamos a la siguiente ronda y se comprueba se se ha llegado al final de la partida */
 
 		int ronda = (int) getBeliefbase().getBelief("Ronda").getFact();
 		
@@ -98,6 +102,8 @@ public class VotarMisionPlan extends Plan
 		}
 			
 		System.out.println("FIN VOTAR MISION");
+
+/* Se comprueba si se ha dado alguna condición de victoria */
 		if((int) getBeliefbase().getBelief("MisionesCompletadas").getFact()==3){
 			finPartida.setGanaResistencia(true);
 			for (int i = 0; i < listajugadores.size(); i++) {
@@ -121,6 +127,8 @@ public class VotarMisionPlan extends Plan
 			System.out.println("GANAN LOS ESPIAS");
 			getBeliefbase().getBelief("FinPartida").setFact(true);
 		}
+
+/* Se actualizan los elementos de la ronda necesarios */
 		getBeliefbase().getBelief("Ronda").setFact(ronda);
 		getBeliefbase().getBelief("LiderAsignado").setFact(false);
 		getBeliefbase().getBelief("VotacionesRechazadas").setFact(0);

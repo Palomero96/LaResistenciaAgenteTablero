@@ -15,5 +15,6 @@ public class EquipoElegidoPlan extends Plan
 		IMessageEvent inform = (IMessageEvent)getInitialEvent();
 		Equipo_elegido rj = (Equipo_elegido) inform.getContent();
 		getBeliefbase().getBelief("Equipo").setFact(rj.getLista_jugadores());
+		getBeliefbase().getBelief("ActivarAprobarEquipo").setFact(true);
 	}
 }

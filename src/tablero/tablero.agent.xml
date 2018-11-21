@@ -81,7 +81,9 @@ package="src.tablero"
 		<belief name="LiderAsignado" class="boolean">
 			<fact>true</fact>	
 		</belief>
-
+		<belief name="ActivarAprobarEquipo" class="boolean">
+			<fact>false</fact>
+		</belief>
 
 		<!-- Creencias que indican que se ha terminado un plan-->
 		<!-- Para saber cuando se acabe el plan preparar partida-->
@@ -123,7 +125,7 @@ package="src.tablero"
 		<achievegoal name="Aprobar_equipo" exclude="when_succeeded"  recur="true" >
 			<creationcondition>
 				<!-- Que se active cuando el equipo este en las creencias y no se haya realizado la votación-->
-				$beliefbase.Equipo != null &amp;&amp; $beliefbase.VotacionEquipoRealizada != true
+				($beliefbase.ActivarAprobarEquipo == true &amp;&amp; $beliefbase.VotacionEquipoRealizada != true)
 			</creationcondition>
 			<targetcondition>
 				$beliefbase.VotacionEquipoRealizada == true

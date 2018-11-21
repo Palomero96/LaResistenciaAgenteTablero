@@ -22,7 +22,7 @@ public class AprobarEquipoPlan extends Plan
 		Lista_Jugadores equipo = (Lista_Jugadores) getBeliefbase().getBelief("Equipo").getFact();
 		// Reset de votos de equipo en las creencias
 		getBeliefbase().getBeliefSet("votosequipo").removeFacts();
-		System.out.println("Equipo pendiente de aprobacion.");		
+		System.out.println("INICIANDO APROBAREQUIPO");		
 		int votosContra = 0;
 		for (int i = 0; i < jugadores.getjugadores().size(); i++ ) {
 			System.out.println(i);
@@ -50,7 +50,6 @@ public class AprobarEquipoPlan extends Plan
 		
 		if (votosContra < 4) {
 			System.out.println("Equipo aprobado");
-			
 			resultVotos.setResultadoequipo(true);
 			getBeliefbase().getBelief("ResultadoEquipo").setFact(true);
 
@@ -91,9 +90,9 @@ public class AprobarEquipoPlan extends Plan
 			}	
 			System.out.println("GANAN LOS ESPIAS");
 			getBeliefbase().getBelief("Preparada").setFact(false);		
-		}
-		
+		}System.out.println("FIN APROBAREQUIPO");
+		getBeliefbase().getBelief("ActivarAprobarEquipo").setFact(false);
 		getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(true);
-		System.out.println("Votacion realizada = " + getBeliefbase().getBelief("VotacionEquipoRealizada").getFact());
+		
 	}
 }

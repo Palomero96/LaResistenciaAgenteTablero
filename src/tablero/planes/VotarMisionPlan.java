@@ -111,19 +111,17 @@ public class VotarMisionPlan extends Plan
 		}
 
 
-		System.out.println("ANTES DE cambiar votacion mision");
-		System.out.println(getBeliefbase().getBelief("VotacionMisionRealizada").getFact());
-		System.out.println("DESPUES DE cambiar votacion mision");
-		System.out.println("ANTES DE OBTENER RONDA BELIEFS");
 		int ronda = (int) getBeliefbase().getBelief("Ronda").getFact();
-		System.out.println("DESPUES DE OBTENER RONDA");
+		
 		ronda = ronda+1;
 		getBeliefbase().getBelief("Ronda").setFact(ronda);
 		getBeliefbase().getBelief("LiderAsignado").setFact(false);
 		getBeliefbase().getBelief("VotacionesRechazadas").setFact(0);
 		// Para cumplir target condition
-		getBeliefbase().getBelief("VotacionMisionRealizada").setFact(true);
 		getBeliefbase().getBelief("ResultadoEquipo").setFact(false);
+		System.out.println("FIN VOTAR MISION");
+		getBeliefbase().getBelief("VotacionMisionRealizada").setFact(true);
+		
 
 		System.out.println("DESPUES DE ACABAR ENTERO EL PLAN VOTAR MISION");
 	}

@@ -7,7 +7,7 @@ import jadex.runtime.Plan;
 import ontologia.acciones.*;
 import ontologia.conceptos.*;
 
-/** Acabado
+/** 
  *  Plan para avisar a los espias de quien son los otos espias 
  */
 public class AvisarEspiasPlan extends Plan
@@ -28,8 +28,8 @@ public class AvisarEspiasPlan extends Plan
 		IMessageEvent enviar = createMessageEvent("Inform_Avisar_espias");
 		Avisar_espias rj = new Avisar_espias();
 
+		//se envia a cada espia una lista de todos los jugadores espias
 		for(int i=0; i< listaespias.size(); i++){
-			//Preguntar si esta bien hecho esto
 			enviar.getParameterSet(SFipa.RECEIVERS).addValue(listaespias.get(i).getIDAgente());
 		}
 		espias.setjugadores((List)listaespias);

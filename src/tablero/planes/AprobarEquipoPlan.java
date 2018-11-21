@@ -23,6 +23,7 @@ public class AprobarEquipoPlan extends Plan
 		// Reset de votos de equipo en las creencias
 		getBeliefbase().getBeliefSet("votosequipo").removeFacts();
 		System.out.println("INICIANDO APROBAREQUIPO");		
+		//contador de votos en contra, se usara para saber si el equipo va o no a la mision
 		int votosContra = 0;
 		for (int i = 0; i < jugadores.getjugadores().size(); i++ ) {
 			System.out.println(i);
@@ -39,26 +40,30 @@ public class AprobarEquipoPlan extends Plan
 			System.out.println(accionAprobarEquipo.getvoto().getequipo() + " tablero");
 
 			getBeliefbase().getBeliefSet("votosequipo").addFact(accionAprobarEquipo.getvoto());
-
+			//si el jugador vota no ir el equipo a la mision
 			if (!accionAprobarEquipo.getvoto().getequipo()) {
 				++votosContra;
 			}
 		}
 		
 		Resultado resultVotos = new Resultado();
+		//contador de rechazos de equipo. Se usa para saber cuantos equipos rechazados llevamos en una misma ronda
 		int votacionesRechazadas = 0;
 		
+		//si hay menor cantidad de votos en contra que a favor, se aprueba el equipo
 		if (votosContra < 4) {
 			System.out.println("Equipo aprobado");
 			resultVotos.setResultadoequipo(true);
 			getBeliefbase().getBelief("ResultadoEquipo").setFact(true);
 
+		//si hay mayor cantidad de votos en contra que a favor, no se aprueba el equipo
 		}else {
 			System.out.println("Equipo no aprobado");
 			votacionesRechazadas = (int) getBeliefbase().getBelief("VotacionesRechazadas").getFact();
 			++votacionesRechazadas;
 
 			getBeliefbase().getBelief("VotacionesRechazadas").setFact(votacionesRechazadas);
+			//si se llega a 5 equipos rechazados en una misma ronda, se termina la partida con victoria de espias y se informa a los jugadores
 			if(votacionesRechazadas == 5) {
 			Partida_Finalizada finPartida = new Partida_Finalizada();
 			finPartida.setGanaResistencia(false);
@@ -74,19 +79,21 @@ public class AprobarEquipoPlan extends Plan
 			getBeliefbase().getBelief("FinPartida").setFact(true);		
 		
 		}
+			//se tendra que escoger un nuevo lider si la votacion de equipo se rechaza
 			resultVotos.setResultadoequipo(false);
 			getBeliefbase().getBelief("LiderAsignado").setFact(false);
 		}
 
 		Votacion_publicada_equipo votacion = new Votacion_publicada_equipo();
 		votacion.setResultado(resultVotos);
-		
+		//se informa del resultado de la votacion a los jugadores
 		for (int i = 0; i < jugadores.getjugadores().size(); i++) {
 			IMessageEvent informVotacion = createMessageEvent("Inform_Votacion_publicada_equipo");
 			informVotacion.getParameterSet(SFipa.RECEIVERS).addValue(jugadores.getjugadores().get(i).getIDAgente());
 			informVotacion.setContent(votacion);
 			sendMessage(informVotacion);			
 		}	
+		//la votacion queda concluida
 		getBeliefbase().getBelief("ActivarAprobarEquipo").setFact(false);
 		getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(true);
 		

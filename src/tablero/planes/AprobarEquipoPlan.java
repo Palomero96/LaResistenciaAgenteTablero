@@ -11,7 +11,7 @@ import ontologia.acciones.*;
 import ontologia.*;
 
 /**
- *  Plan para pedir un equipo al lider y
+ *  Plan para pedir votacion a los jugadores, si quieren que el equipo que ha escogido el lider vaya o no a la misión
  */
 public class AprobarEquipoPlan extends Plan
 {

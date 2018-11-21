@@ -15,7 +15,7 @@ import ontologia.predicados.Lider_asignado;
  */
 public class AsignarLiderPlan extends Plan
 {
-	
+	/* Se recorre la lista de jugadores para asignar el nuevo lider */
 	public void body()
 	{
 		System.out.println("ESTOY ASIGNANDO NUEVO LIDER");
@@ -36,6 +36,7 @@ public class AsignarLiderPlan extends Plan
 			}
 		}
 		
+		/* Una vez el lider es asignado se le informa de cuantas personas pueden componer el equipo a formar acorde a la ronda */
 		Lider_asignado liderasignado = new Lider_asignado();
 		liderasignado.setLider(true);
 		int numjugadoresequipo = 0;
@@ -66,7 +67,7 @@ public class AsignarLiderPlan extends Plan
 		System.out.println("Nuevo liderasignado:"+ liderId);
 		sendMessage(enviar);
 		
-		getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(false);	
+	/* comunicamos que el lider ha sido asignado */	getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(false);	
 		getBeliefbase().getBelief("VotacionMisionRealizada").setFact(false);
 		getBeliefbase().getBelief("LiderAsignado").setFact(true);
 

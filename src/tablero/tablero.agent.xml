@@ -22,12 +22,13 @@ package="src.tablero"
 	<capabilities>
 	    <capability name="dfcap" file="jadex.planlib.DF"/>
 	</capabilities>
-
+	
+	<!-- Base de creencias -->
 	<beliefs>
 		<!-- Para almacenar los votos del equipo -->
 		<beliefset name="votosequipo" class="Voto"/>
 		
-		<!-- Para almacenar los votos del mision -->
+		<!-- Para almacenar los votos de la mision -->
 		<beliefset name="votosmision" class="Voto"/>
 
 		<!-- Los jugadores -->
@@ -35,52 +36,56 @@ package="src.tablero"
 			<fact>new Lista_Jugadores()</fact>
 		</belief>
 
+		<!-- Reperesentacion del numero actual de jugadores (comienza la partida con 0) -->
 		<belief name="total" class="int">
 			<fact>0</fact>
 		</belief>
 
-				<!-- Jugadores que van a ir a la mision -->
+		<!-- Jugadores que van a ir a la mision -->
 		<belief name="Equipo" class="Lista_Jugadores">
 			<fact>null</fact>
 		</belief>
 		
-		<!-- Representacion de la ronda en la que estamos-->
+		<!-- Representacion de la ronda en la que estamos (comienza la partida en la ronda 1)-->
 		<belief name="Ronda" class="int">
 			<fact>1</fact>
 		</belief>
 
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda1-->
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda 1-->
 		<belief name="Equipo1" class="int">
 			<fact>2</fact>
 		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda2-->
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda 2-->
 		<belief name="Equipo2" class="int">
 			<fact>3</fact>
 		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda3-->
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda 3-->
 		<belief name="Equipo3" class="int">
 			<fact>3</fact>
 		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda4-->
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda 4-->
 		<belief name="Equipo4" class="int">
 			<fact>4</fact>
 		</belief>
-		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda5-->
+		<!-- Representacion de el numero de jugadores que forma parte del equipo en la Ronda 5-->
 		<belief name="Equipo5" class="int">
 			<fact>4</fact>
 		</belief>
-		<!-- Representacion de el numero de votaciones-->
+		<!-- Representacion del numero de votaciones de equipo que se han rechazado en una misma ronda-->
 		<belief name="VotacionesRechazadas" class="int">
 			<fact>0</fact>	
 		</belief>
-		<!-- Representacion de el numero de misiones que se han completado-->
+		<!-- Representacion del numero de misiones que se han completado-->
 		<belief name="MisionesCompletadas" class="int">
 			<fact>0</fact>	
 		</belief>
 		
+		<!-- Para saber si el lider ha sido asignado-->
 		<belief name="LiderAsignado" class="boolean">
 			<fact>true</fact>	
 		</belief>
+		
+		<!-- Para saber si el equipo ha sido aprobado-->
 		<belief name="ActivarAprobarEquipo" class="boolean">
 			<fact>false</fact>
 		</belief>
@@ -102,13 +107,14 @@ package="src.tablero"
 		<belief name="VotacionMisionRealizada" class="boolean">
 			<fact>false</fact>
 		</belief>
+		<!-- Para saber cuando se termina la partida-->
 		<belief name="FinPartida" class="boolean">
 			<fact>false</fact>
 		</belief>
 
-
 	</beliefs>
 	
+	<!-- Metas del tablero -->
 	<goals>
 		<!-- Objetivo principal jugar una partida -->
 		<performgoal name="JugarPartida" exclude="when_succeeded">
@@ -120,16 +126,16 @@ package="src.tablero"
 		<!-- Objetivo de avisar a los espias de quienes son los otros espias-->
 		<performgoal name="AvisarEspias" exclude="when_tried" >
 			<creationcondition>
-				<!-- Para que avise a los espias de quienes son los otros espias-->
+				<!-- Para que avise a los espias de quienes son los otros espias cuando este preparada la partida-->
 				$beliefbase.Preparada == true
 			</creationcondition>
 		</performgoal>
 
 		
-		<!-- Objetivo de publicar la votacion de mision-->
+		<!-- Objetivo de publicar la votacion de equipo-->
 		<achievegoal name="Aprobar_equipo" exclude="when_succeeded"  recur="true" >
 			<creationcondition>
-				<!-- Que se active cuando el equipo este en las creencias y no se haya realizado la votación-->
+				<!-- Que se active cuando la votacion de equipo no haya sido realizada y este activado aprobar equipo (es el momento de la partida en que se debe aprobar el equipo)-->
 				($beliefbase.ActivarAprobarEquipo == true &amp;&amp; $beliefbase.VotacionEquipoRealizada != true &amp;&amp; $beliefbase.FinPartida==false)
 			</creationcondition>
 			<targetcondition>
@@ -139,19 +145,17 @@ package="src.tablero"
 		<!-- Objetivo de publicar la votacion de mision-->
 		<achievegoal name="VotarMision" exclude="when_succeeded" recur="true">
 			<creationcondition>
-				<!-- Que se active cuando el equipo este en las creencias-->
+				<!-- Que se active cuando la votacion de mision no haya sido realizada y el equipo que va a la mision este en las creencias-->
 				$beliefbase.ResultadoEquipo == true &amp;&amp; $beliefbase.VotacionMisionRealizada != true &amp;&amp; $beliefbase.FinPartida==false
 			</creationcondition>
 			<targetcondition>
 				$beliefbase.VotacionMisionRealizada == true
 			</targetcondition>
 		</achievegoal>
-		<!-- Objetivo para asignar un lider-->
-		
-		<!-- TODO:  VER SI HAY QUE HACERLO COMO ACHIEVEGOAL-->
+		<!-- Objetivo para asignar un lider-->		
 		<performgoal name="Asignar_Lider" exclude="when_succeeded">
 			<creationcondition>
-				<!-- Que se active cuando el equipo este en las creencias-->
+				<!-- Que se active cuando el lider no se encuentre asignado-->
 				$beliefbase.LiderAsignado == false &amp;&amp; $beliefbase.FinPartida==false
 			</creationcondition>
 		</performgoal>
@@ -160,10 +164,10 @@ package="src.tablero"
 	    <achievegoalref name="df_register">
             <concrete ref="dfcap.df_register"/>
         </achievegoalref>
-        
-
+       
 	</goals>
 
+	<!-- Planes del tablero -->
 	<plans> 
 		<!-- Registrar a un jugador -->
 		<plan name="register_plan">
@@ -172,7 +176,7 @@ package="src.tablero"
 				<messageevent ref="Request_unirsepartida"/>
 			</trigger>
 		</plan>
-		<!-- Plan para preparar la partida (asignar en funcion del numeor quienes van a ser espias y demas) -->
+		<!-- Plan para preparar la partida (asignar en funcion del numero de jugadores quienes van a ser espias, etc...) -->
 		<plan name="PrepararPartida">
 			<body class="PrepararPartidaPlan"/>
 			<trigger>
@@ -211,7 +215,7 @@ package="src.tablero"
 			</trigger>
 		</plan>
 
-		<!-- Plan para publicar el resultado de la mision, cambiar de ronda, cambiar de lider y aumentar o no las misiones completadas -->
+		<!-- Plan para asignar un lider -->
 		<plan name="AsignarLider">
 			<body class="AsignarLiderPlan"/>
 			<trigger>
@@ -221,6 +225,7 @@ package="src.tablero"
 
 	</plans>
 
+	<!-- Eventos-->
 	<events>
 
 		<!-- Mensajes de Jugadores-->
@@ -322,7 +327,7 @@ package="src.tablero"
 			</parameter>
 		</messageevent>
 		
-		<!--  Inform repartir tarjeta personaje (para decidir quien va a ser espia y quien va a ser resistencia) -->
+		<!--  Inform repartir tarjeta personaje (para saber quien va a ser espia y quien va a ser resistencia) -->
 		<messageevent name="Inform_Tarjetas_personajes_repartidas" direction="send" type="fipa">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.INFORM</value>

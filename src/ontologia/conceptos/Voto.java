@@ -3,6 +3,7 @@ package ontologia.conceptos;
 public class Voto extends Concepto {
 
  private boolean equipo;
+ private AgentIdentifier IDAgente;
  private boolean mision;
  
 	public Voto()
@@ -19,4 +20,11 @@ public class Voto extends Concepto {
        public void setmision(boolean a) {
            mision=a;
        }   
+         public AgentIdentifier getIDAgente() {
+           return IDAgente;
+       }
+       public void setIDAgente(AgentIdentifier a) {
+           IDAgente=a;
+       }
+
 }

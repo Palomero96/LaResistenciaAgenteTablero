@@ -78,6 +78,9 @@ public class VotarMisionPlan extends Plan
 
 		Votacion_publicada_equipo votacion = new Votacion_publicada_equipo();
 		votacion.setResultado(resultVotos);
+		votacion.setFracasos(fracasos);
+		votacion.setExitos(exitos);
+
 		
 		for (int i = 0; i < listajugadores.size(); i++) {
 			IMessageEvent informVotacion = createMessageEvent("Inform_Votacion_publicada_mision");

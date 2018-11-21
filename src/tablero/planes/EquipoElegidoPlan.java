@@ -4,7 +4,7 @@ import jadex.runtime.IMessageEvent;
 import jadex.runtime.Plan;
 import ontologia.predicados.Equipo_elegido;
 
-/**	Acabado
+/**	
  *  Plan para conocer el posible equipo que ira a la mision
  */
 public class EquipoElegidoPlan extends Plan

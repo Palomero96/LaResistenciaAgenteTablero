@@ -10,7 +10,7 @@ import ontologia.conceptos.Jugador;
 import ontologia.conceptos.Lista_Jugadores;
 import ontologia.predicados.Lider_asignado;
 
-/** Acabado
+/** 
  *  Plan para asignar el lider
  */
 public class AsignarLiderPlan extends Plan
@@ -67,7 +67,8 @@ public class AsignarLiderPlan extends Plan
 		System.out.println("Nuevo liderasignado:"+ liderId);
 		sendMessage(enviar);
 		
-	/* comunicamos que el lider ha sido asignado */	getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(false);	
+	/* comunicamos que el lider ha sido asignado */
+		getBeliefbase().getBelief("VotacionEquipoRealizada").setFact(false);	
 		getBeliefbase().getBelief("VotacionMisionRealizada").setFact(false);
 		getBeliefbase().getBelief("LiderAsignado").setFact(true);
 

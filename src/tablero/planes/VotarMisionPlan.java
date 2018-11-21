@@ -13,7 +13,7 @@ import ontologia.predicados.Partida_Finalizada;
 import ontologia.predicados.Tarjetas_exito_fracaso_repartidas;
 import ontologia.predicados.Votacion_publicada_mision;
 
-/**	Acabado
+/**	
  *  Plan para votar la mision
  */
 public class VotarMisionPlan extends Plan

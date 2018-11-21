@@ -115,7 +115,12 @@ package="src.jugador"
 				<messageevent ref="Request_Votar_mision"/>
 			</trigger>
 		</plan>
-
+		<plan name="Comprobar">
+			<body class="ComprobarPlan"/>
+			<trigger>
+				<messageevent ref="Inform_Votacion_publicada_mision"/>
+			</trigger>
+		</plan>
 
 		<!-- Info partida -->
 		<plan name="Aprobar_Equipo">

@@ -11,7 +11,7 @@ import ontologia.conceptos.Lista_Jugadores;
 import ontologia.conceptos.Resultado;
 import ontologia.predicados.Partida_Finalizada;
 import ontologia.predicados.Tarjetas_exito_fracaso_repartidas;
-import ontologia.predicados.Votacion_publicada_equipo;
+import ontologia.predicados.Votacion_publicada_mision;
 
 /**	Acabado
  *  Plan para votar la mision
@@ -76,7 +76,7 @@ public class VotarMisionPlan extends Plan
 		 int NumRonda = (int) getBeliefbase().getBelief("Ronda").getFact();
 		 Partida_Finalizada finPartida = new Partida_Finalizada();
 
-		Votacion_publicada_equipo votacion = new Votacion_publicada_equipo();
+		Votacion_publicada_mision votacion = new Votacion_publicada_mision();
 		votacion.setResultado(resultVotos);
 		votacion.setFracasos(fracasos);
 		votacion.setExitos(exitos);

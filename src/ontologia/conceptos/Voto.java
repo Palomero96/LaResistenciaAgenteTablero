@@ -1,4 +1,5 @@
 package ontologia.conceptos;
+import jadex.adapter.fipa.AgentIdentifier;
 
 public class Voto extends Concepto {
 

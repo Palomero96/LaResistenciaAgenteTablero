@@ -1,7 +1,7 @@
 package ontologia.predicados;
 
-import ontologia.conceptos.Resultado;
-
+import ontologia.conceptos.*;
+import java.util.*;
 public class Votacion_publicada_equipo extends Predicado {
     private Resultado resultado;
     private ArrayList <Voto> votosEquipo; 
@@ -16,7 +16,7 @@ public class Votacion_publicada_equipo extends Predicado {
     	   resultado=l;
        }
 
-		public Resultado getvotosEquipo() {
+		public ArrayList<Voto> getvotosEquipo() {
            return votosEquipo;
        }
 

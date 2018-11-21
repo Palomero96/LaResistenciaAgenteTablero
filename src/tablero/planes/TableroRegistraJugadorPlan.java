@@ -11,7 +11,7 @@ import ontologia.predicados.Lider_asignado;
 
 
 /**
- *  PLan para unir a un jugador a la partida
+ *  Plan para unir a un jugador a la partida
  */
 public class TableroRegistraJugadorPlan extends Plan
 {
@@ -30,18 +30,9 @@ public class TableroRegistraJugadorPlan extends Plan
 
 		/*HAY QUE QUITAR LO DE ASIGNAR LIDER AL PRIMER JUGADOR*/
 		if(jugadores.getjugadores()==null){
-			//Si el jugador es el primero que se une a la partida se le asigna como lider
+			
 							lista = new ArrayList<Jugador>();
 							player.setLider(false);
-							//Le enviamos al lider el mensaje de que es lider
-						/*	IMessageEvent enviar = createMessageEvent("Inform_Lider_asignado");
-							Lider_asignado rj2 = new Lider_asignado();
-							rj2.setLider(true);
-							rj2.setEquipo((int) getBeliefbase().getBelief("Equipo1").getFact());
-							enviar.getParameterSet(SFipa.RECEIVERS).addValue(player.getIDAgente());
-							enviar.setContent(rj2);
-							sendMessage(enviar);
-							System.out.println("Voy a ser el lider");*/
 							player.setEspia(false);
 							lista.add(player);
 							jugadores.setjugadores((List)lista);
@@ -50,6 +41,8 @@ public class TableroRegistraJugadorPlan extends Plan
 							Unirse_a_la_partida rj3 = new Unirse_a_la_partida();
 							rj3.setjugador(player);
 							sendMessage(request.createReply("Agree_unirse_a_partida", rj3));
+
+/* Se coge el numero de jugadores registrado y se aumenta en 1 unidad */
 							int total = (int) getBeliefbase().getBelief("total").getFact();
 							total= total+1;
 							getBeliefbase().getBelief("total").setFact(total);
@@ -67,16 +60,20 @@ public class TableroRegistraJugadorPlan extends Plan
 						Unirse_a_la_partida rj3 = new Unirse_a_la_partida();
 						rj3.setjugador(player);
 						sendMessage(request.createReply("Agree_unirse_a_partida", rj3));
+
+/* Se coge el numero de jugadores registrado y se aumenta en 1 unidad */
 						int total = (int) getBeliefbase().getBelief("total").getFact();
 						total= total+1;
 						getBeliefbase().getBelief("total").setFact(total);
 						System.out.println("Jugador unido a la partida.");
 				}else{
+/* Se ha alcanzado el numero maximo de jugadores, asi que se rechaza al nuevo jugador */
 					System.out.println("La partida es para 7 jugadores.");
 					sendMessage(request.createReply("Refuse_unirse_a_partida", rj));
 				}
 		}
 
+/* Se informa de la lista de jugadores */
 		Lista_Jugadores jugadoresb = (Lista_Jugadores) getBeliefbase().getBelief("jugadores").getFact();
 		ArrayList<Jugador> listaa = (ArrayList) jugadoresb.getjugadores();		
 	}

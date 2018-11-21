@@ -22,7 +22,8 @@ public class AprobarEquipoPlan extends Plan
 		Lista_Jugadores equipo = (Lista_Jugadores) getBeliefbase().getBelief("Equipo").getFact();
 		// Reset de votos de equipo en las creencias
 		getBeliefbase().getBeliefSet("votosequipo").removeFacts();
-		System.out.println("INICIANDO APROBAREQUIPO");		
+		System.out.println("INICIANDO APROBAREQUIPO");
+		ArrayList <Voto> votosEquipo = new ArrayList <Voto>();
 		//contador de votos en contra, se usara para saber si el equipo va o no a la mision
 		int votosContra = 0;
 		for (int i = 0; i < jugadores.getjugadores().size(); i++ ) {
@@ -38,8 +39,10 @@ public class AprobarEquipoPlan extends Plan
 			System.out.println(accionAprobarEquipo + " tablero");
 			System.out.println(accionAprobarEquipo.getvoto() + " tablero");
 			System.out.println(accionAprobarEquipo.getvoto().getequipo() + " tablero");
-
-			getBeliefbase().getBeliefSet("votosequipo").addFact(accionAprobarEquipo.getvoto());
+			Voto voto = new Voto();
+			voto.setequipo(accionAprobarEquipo.getvoto().getequipo());
+			voto.setIDAgente((AgentIdentifier) reply.getParameter("sender").getValue());
+			votosEquipo.add(voto);
 			//si el jugador vota no ir el equipo a la mision
 			if (!accionAprobarEquipo.getvoto().getequipo()) {
 				++votosContra;

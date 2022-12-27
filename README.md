@@ -1,2 +1,3 @@
 # LaResistenciaAgenteTablero
-Agente Tablero del juego de mesa de la Resistencia para la asignatura de Inteligencia Artificial en las Organizaciones
+Development of the Board Agent of the Resistance board game for the Artificial Intelligence in Organizations Subject.
+
